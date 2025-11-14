@@ -73,20 +73,31 @@
     - Create methods: create, findByStudentAndEvent, findByStudent, findByEvent, delete
     - _Requirements: 6.3, 6.4, 6.5_
 
-- [ ] 4. Build service layer with business logic
-  - [ ] 4.1 Implement AuthService for authentication operations
+- [x] 4. Build service layer with business logic
+
+
+
+
+
+  - [x] 4.1 Implement AuthService for authentication operations
+
+
     - Create register method with password hashing
     - Create login method with password verification and token generation
     - Create logout method for session invalidation
     - Create verifyToken method for JWT validation
     - _Requirements: 1.1, 1.2, 1.5_
-  - [ ] 4.2 Implement StudentService for student profile management
+  - [x] 4.2 Implement StudentService for student profile management
+
+
     - Create getById method to retrieve student profile without password
     - Create update method with validation
     - Create getMemberships method to get student's club memberships
     - Create getUpcomingEvents method to get student's RSVP'd events
     - _Requirements: 1.3, 1.4, 3.4, 7.4, 7.5_
-  - [ ] 4.3 Implement ClubService for club management
+  - [x] 4.3 Implement ClubService for club management
+
+
     - Create getAll method with filtering, search, and pagination
     - Create getById method with member count and next event
     - Create create method with admin assignment
@@ -94,21 +105,30 @@
     - Create delete method with cascade handling
     - Create isAdmin helper method for authorization checks
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 4.1, 4.2_
-  - [ ] 4.4 Implement ClubService membership management methods
+  - [x] 4.4 Implement ClubService membership management methods
+
+
     - Create getMembers method with status filtering
     - Create addMember method with duplicate check
     - Create updateMemberStatus method for admin approval/rejection
     - Create removeMember method for leaving clubs
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 4.3, 4.4_
-  - [ ] 4.5 Implement EventService for event management
+
+
+  - [x] 4.5 Implement EventService for event management
+
     - Create getAll method with filtering and pagination
     - Create getById method with club info and attendee count
     - Create create method with date validation
     - Create update method with date validation
     - Create delete method with cascade handling
+
+
     - Create validateEventDate helper method
     - _Requirements: 5.1, 5.2, 5.3, 5.5, 6.1, 6.2_
-  - [ ] 4.6 Implement EventService RSVP management methods
+  - [x] 4.6 Implement EventService RSVP management methods
+
+
     - Create getAttendees method to list event attendees
     - Create addRsvp method with duplicate check
     - Create removeRsvp method for canceling RSVPs
