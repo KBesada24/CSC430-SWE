@@ -313,6 +313,7 @@
 
   - [x] 10.5 Implement DELETE /api/events/[id] endpoint
 
+
     - Apply authentication middleware
     - Verify authenticated student is admin of event's club
     - Call EventService.delete to remove event
@@ -353,7 +354,9 @@
     - Return personal statistics
     - _Requirements: 7.4, 7.5_
 
-- [ ] 13. Implement TypeScript type definitions
+- [x] 13. Implement TypeScript type definitions
+
+
   - Create API response types (ApiResponse, ApiError, PaginatedResponse)
   - Create DTO types for all request/response payloads
   - Create filter and pagination types
