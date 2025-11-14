@@ -13,21 +13,40 @@
   - Create JWT token generation and verification utilities
   - _Requirements: 1.1, 1.2, 8.1, 8.2, 8.3, 9.1, 9.2_
 
-- [ ] 2. Implement data validation schemas
+- [x] 2. Implement data validation schemas
+
+
+
+
+
   - Create Zod schemas for authentication (register, login)
   - Create Zod schemas for club operations (create, update, filters)
   - Create Zod schemas for event operations (create, update, filters)
   - Create Zod schemas for student profile updates
   - _Requirements: 8.1, 8.4_
 
-- [ ] 3. Build repository layer for data access
-  - [ ] 3.1 Implement StudentRepository with CRUD operations
+- [x] 3. Build repository layer for data access
+
+
+
+
+  - [x] 3.1 Implement StudentRepository with CRUD operations
+
+
     - Create methods: create, findById, findByEmail, update, delete
+
+
     - _Requirements: 1.1, 1.3, 1.4_
-  - [ ] 3.2 Implement ClubRepository with CRUD and query operations
+  - [x] 3.2 Implement ClubRepository with CRUD and query operations
+
+
     - Create methods: create, findById, findAll with filters, update, delete
     - Implement getMemberCount and getNextEvent helper methods
+
+
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 4.1, 4.2_
+
+
   - [ ] 3.3 Implement EventRepository with CRUD and query operations
     - Create methods: create, findById, findAll with filters, findByClubId, update, delete
     - Implement getAttendeeCount helper method
