@@ -255,32 +255,48 @@
     - Verify authenticated student is club admin
     - Validate status in request body
     - Call ClubService.updateMemberStatus to approve/reject
+
+
+
+
     - _Requirements: 3.2, 4.4_
   - [ ] 9.4 Implement DELETE /api/clubs/[id]/members/[studentId] endpoint
     - Apply authentication middleware
+
     - Verify authenticated student is member or admin
     - Call ClubService.removeMember to delete membership
     - _Requirements: 3.3_
 
-- [ ] 10. Build event API routes
+- [x] 10. Build event API routes
+
+
   - [ ] 10.1 Implement GET /api/events endpoint
     - Parse query parameters for filters and pagination
+
     - Call EventService.getAll with filters
     - Return paginated event list with club details
     - _Requirements: 6.1, 6.2, 9.3_
   - [ ] 10.2 Implement POST /api/events endpoint
     - Apply authentication middleware
+
     - Validate request body using createEventSchema
     - Verify authenticated student is admin of specified club
     - Call EventService.create to create event
     - _Requirements: 5.1, 5.5_
+
+
+
+
   - [ ] 10.3 Implement GET /api/events/[id] endpoint
     - Call EventService.getById to retrieve event details
+
     - Include club info and attendee count in response
     - _Requirements: 6.1_
   - [ ] 10.4 Implement PATCH /api/events/[id] endpoint
     - Apply authentication middleware
     - Verify authenticated student is admin of event's club
+
+
     - Validate request body using updateEventSchema
     - Call EventService.update to persist changes
     - _Requirements: 5.2, 5.5_
