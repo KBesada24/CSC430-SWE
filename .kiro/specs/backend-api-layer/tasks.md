@@ -1,0 +1,255 @@
+# Implementation Plan
+
+- [x] 1. Set up core infrastructure and utilities
+
+
+
+
+
+  - Create Supabase client configuration for server-side operations
+  - Implement API response utility functions for consistent response formatting
+  - Implement error handling utilities and custom error classes
+  - Implement password hashing and comparison utilities using bcrypt
+  - Create JWT token generation and verification utilities
+  - _Requirements: 1.1, 1.2, 8.1, 8.2, 8.3, 9.1, 9.2_
+
+- [ ] 2. Implement data validation schemas
+  - Create Zod schemas for authentication (register, login)
+  - Create Zod schemas for club operations (create, update, filters)
+  - Create Zod schemas for event operations (create, update, filters)
+  - Create Zod schemas for student profile updates
+  - _Requirements: 8.1, 8.4_
+
+- [ ] 3. Build repository layer for data access
+  - [ ] 3.1 Implement StudentRepository with CRUD operations
+    - Create methods: create, findById, findByEmail, update, delete
+    - _Requirements: 1.1, 1.3, 1.4_
+  - [ ] 3.2 Implement ClubRepository with CRUD and query operations
+    - Create methods: create, findById, findAll with filters, update, delete
+    - Implement getMemberCount and getNextEvent helper methods
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 4.1, 4.2_
+  - [ ] 3.3 Implement EventRepository with CRUD and query operations
+    - Create methods: create, findById, findAll with filters, findByClubId, update, delete
+    - Implement getAttendeeCount helper method
+    - _Requirements: 5.1, 5.3, 6.1, 6.2_
+  - [ ] 3.4 Implement MembershipRepository for club membership management
+    - Create methods: create, findByStudentAndClub, findByStudent, findByClub, updateStatus, delete
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 4.3, 4.4_
+  - [ ] 3.5 Implement RsvpRepository for event RSVP management
+    - Create methods: create, findByStudentAndEvent, findByStudent, findByEvent, delete
+    - _Requirements: 6.3, 6.4, 6.5_
+
+- [ ] 4. Build service layer with business logic
+  - [ ] 4.1 Implement AuthService for authentication operations
+    - Create register method with password hashing
+    - Create login method with password verification and token generation
+    - Create logout method for session invalidation
+    - Create verifyToken method for JWT validation
+    - _Requirements: 1.1, 1.2, 1.5_
+  - [ ] 4.2 Implement StudentService for student profile management
+    - Create getById method to retrieve student profile without password
+    - Create update method with validation
+    - Create getMemberships method to get student's club memberships
+    - Create getUpcomingEvents method to get student's RSVP'd events
+    - _Requirements: 1.3, 1.4, 3.4, 7.4, 7.5_
+  - [ ] 4.3 Implement ClubService for club management
+    - Create getAll method with filtering, search, and pagination
+    - Create getById method with member count and next event
+    - Create create method with admin assignment
+    - Create update method with validation
+    - Create delete method with cascade handling
+    - Create isAdmin helper method for authorization checks
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 4.1, 4.2_
+  - [ ] 4.4 Implement ClubService membership management methods
+    - Create getMembers method with status filtering
+    - Create addMember method with duplicate check
+    - Create updateMemberStatus method for admin approval/rejection
+    - Create removeMember method for leaving clubs
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 4.3, 4.4_
+  - [ ] 4.5 Implement EventService for event management
+    - Create getAll method with filtering and pagination
+    - Create getById method with club info and attendee count
+    - Create create method with date validation
+    - Create update method with date validation
+    - Create delete method with cascade handling
+    - Create validateEventDate helper method
+    - _Requirements: 5.1, 5.2, 5.3, 5.5, 6.1, 6.2_
+  - [ ] 4.6 Implement EventService RSVP management methods
+    - Create getAttendees method to list event attendees
+    - Create addRsvp method with duplicate check
+    - Create removeRsvp method for canceling RSVPs
+    - _Requirements: 5.4, 6.3, 6.4, 6.5_
+
+- [ ] 5. Implement middleware for cross-cutting concerns
+  - Create authentication middleware to verify JWT tokens and attach student to request
+  - Create authorization middleware to verify club admin permissions
+  - Create validation middleware wrapper for Zod schema validation
+  - Create error handling middleware to catch and format errors
+  - _Requirements: 1.5, 4.2, 4.5, 8.1, 8.2, 8.3_
+
+- [ ] 6. Build authentication API routes
+  - [ ] 6.1 Implement POST /api/auth/register endpoint
+    - Validate request body using registerSchema
+    - Call AuthService.register to create new student
+    - Return student data without password
+    - _Requirements: 1.1_
+  - [ ] 6.2 Implement POST /api/auth/login endpoint
+    - Validate request body using loginSchema
+    - Call AuthService.login to authenticate and generate token
+    - Return token and student data
+    - _Requirements: 1.2_
+  - [ ] 6.3 Implement POST /api/auth/logout endpoint
+    - Apply authentication middleware
+    - Call AuthService.logout to invalidate session
+    - Return success response
+    - _Requirements: 1.5_
+
+- [ ] 7. Build student API routes
+  - [ ] 7.1 Implement GET /api/students/[id] endpoint
+    - Call StudentService.getById to retrieve profile
+    - Return student data without password
+    - _Requirements: 1.3_
+  - [ ] 7.2 Implement PATCH /api/students/[id] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student matches requested ID
+    - Validate request body
+    - Call StudentService.update to persist changes
+    - _Requirements: 1.4_
+  - [ ] 7.3 Implement GET /api/students/[id]/memberships endpoint
+    - Apply authentication middleware
+    - Call StudentService.getMemberships to get club list
+    - Return memberships with club details
+    - _Requirements: 3.4_
+
+- [ ] 8. Build club API routes
+  - [ ] 8.1 Implement GET /api/clubs endpoint
+    - Parse query parameters for filters and pagination
+    - Call ClubService.getAll with filters
+    - Return paginated club list with member counts
+    - _Requirements: 2.1, 2.2, 2.3, 2.5, 9.3_
+  - [ ] 8.2 Implement POST /api/clubs endpoint
+    - Apply authentication middleware
+    - Validate request body using createClubSchema
+    - Call ClubService.create with authenticated student as admin
+    - Return created club data
+    - _Requirements: 4.1_
+  - [ ] 8.3 Implement GET /api/clubs/[id] endpoint
+    - Call ClubService.getById to retrieve club details
+    - Include next event and member count in response
+    - _Requirements: 2.4_
+  - [ ] 8.4 Implement PATCH /api/clubs/[id] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student is club admin
+    - Validate request body using updateClubSchema
+    - Call ClubService.update to persist changes
+    - _Requirements: 4.2, 4.5_
+  - [ ] 8.5 Implement DELETE /api/clubs/[id] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student is club admin
+    - Call ClubService.delete to remove club
+    - _Requirements: 4.5_
+
+- [ ] 9. Build club membership API routes
+  - [ ] 9.1 Implement GET /api/clubs/[id]/members endpoint
+    - Parse query parameter for status filter
+    - Call ClubService.getMembers with optional status filter
+    - Return member list with student details
+    - _Requirements: 4.3_
+  - [ ] 9.2 Implement POST /api/clubs/[id]/members endpoint
+    - Apply authentication middleware
+    - Call ClubService.addMember with authenticated student ID
+    - Handle duplicate membership error
+    - Return created membership
+    - _Requirements: 3.1, 3.5_
+  - [ ] 9.3 Implement PATCH /api/clubs/[id]/members/[studentId] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student is club admin
+    - Validate status in request body
+    - Call ClubService.updateMemberStatus to approve/reject
+    - _Requirements: 3.2, 4.4_
+  - [ ] 9.4 Implement DELETE /api/clubs/[id]/members/[studentId] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student is member or admin
+    - Call ClubService.removeMember to delete membership
+    - _Requirements: 3.3_
+
+- [ ] 10. Build event API routes
+  - [ ] 10.1 Implement GET /api/events endpoint
+    - Parse query parameters for filters and pagination
+    - Call EventService.getAll with filters
+    - Return paginated event list with club details
+    - _Requirements: 6.1, 6.2, 9.3_
+  - [ ] 10.2 Implement POST /api/events endpoint
+    - Apply authentication middleware
+    - Validate request body using createEventSchema
+    - Verify authenticated student is admin of specified club
+    - Call EventService.create to create event
+    - _Requirements: 5.1, 5.5_
+  - [ ] 10.3 Implement GET /api/events/[id] endpoint
+    - Call EventService.getById to retrieve event details
+    - Include club info and attendee count in response
+    - _Requirements: 6.1_
+  - [ ] 10.4 Implement PATCH /api/events/[id] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student is admin of event's club
+    - Validate request body using updateEventSchema
+    - Call EventService.update to persist changes
+    - _Requirements: 5.2, 5.5_
+  - [ ] 10.5 Implement DELETE /api/events/[id] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student is admin of event's club
+    - Call EventService.delete to remove event
+    - _Requirements: 5.3_
+
+- [ ] 11. Build event RSVP API routes
+  - [ ] 11.1 Implement GET /api/events/[id]/rsvps endpoint
+    - Call EventService.getAttendees to get attendee list
+    - Return list of students with RSVP details
+    - _Requirements: 5.4_
+  - [ ] 11.2 Implement POST /api/events/[id]/rsvps endpoint
+    - Apply authentication middleware
+    - Call EventService.addRsvp with authenticated student ID
+    - Handle duplicate RSVP error
+    - Return created RSVP
+    - _Requirements: 6.3, 6.5_
+  - [ ] 11.3 Implement DELETE /api/events/[id]/rsvps/[studentId] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student matches studentId
+    - Call EventService.removeRsvp to cancel RSVP
+    - _Requirements: 6.4_
+
+- [ ] 12. Build statistics API routes
+  - [ ] 12.1 Implement GET /api/stats endpoint
+    - Query total club count from ClubRepository
+    - Query total active membership count from MembershipRepository
+    - Query upcoming events count (next 30 days) from EventRepository
+    - Return platform statistics
+    - _Requirements: 7.1, 7.2, 7.3_
+  - [ ] 12.2 Implement GET /api/stats/student/[id] endpoint
+    - Apply authentication middleware
+    - Verify authenticated student matches requested ID
+    - Query student's active membership count
+    - Query student's upcoming RSVP count
+    - Return personal statistics
+    - _Requirements: 7.4, 7.5_
+
+- [ ] 13. Implement TypeScript type definitions
+  - Create API response types (ApiResponse, ApiError, PaginatedResponse)
+  - Create DTO types for all request/response payloads
+  - Create filter and pagination types
+  - Export all types from centralized api.types.ts file
+  - _Requirements: 9.1, 9.2, 9.3, 9.4_
+
+- [ ] 14. Add CORS and security headers
+  - Configure CORS headers in API routes for frontend access
+  - Add security headers (Content-Security-Policy, X-Frame-Options, etc.)
+  - Implement request size limits
+  - Add rate limiting configuration for authentication endpoints
+  - _Requirements: 8.5, 9.5_
+
+- [ ] 15. Create API documentation
+  - Document all API endpoints with request/response examples
+  - Document authentication flow and token usage
+  - Document error codes and their meanings
+  - Create Postman collection or OpenAPI specification
+  - _Requirements: All_
