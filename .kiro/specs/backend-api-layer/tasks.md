@@ -300,10 +300,16 @@
     - Validate request body using updateEventSchema
     - Call EventService.update to persist changes
     - _Requirements: 5.2, 5.5_
+
+
+
+
   - [ ] 10.5 Implement DELETE /api/events/[id] endpoint
     - Apply authentication middleware
     - Verify authenticated student is admin of event's club
     - Call EventService.delete to remove event
+
+
     - _Requirements: 5.3_
 
 - [ ] 11. Build event RSVP API routes
