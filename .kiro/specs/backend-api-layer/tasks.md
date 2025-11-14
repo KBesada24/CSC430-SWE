@@ -134,7 +134,7 @@
     - Create removeRsvp method for canceling RSVPs
     - _Requirements: 5.4, 6.3, 6.4, 6.5_
 
-- [ ] 5. Implement middleware for cross-cutting concerns
+- [] 5. Implement middleware for cross-cutting concerns
 
 
 
@@ -144,18 +144,26 @@
   - Create error handling middleware to catch and format errors
   - _Requirements: 1.5, 4.2, 4.5, 8.1, 8.2, 8.3_
 
-- [ ] 6. Build authentication API routes
-  - [ ] 6.1 Implement POST /api/auth/register endpoint
+- [x] 6. Build authentication API routes
+
+
+  - [x] 6.1 Implement POST /api/auth/register endpoint
+
+
     - Validate request body using registerSchema
     - Call AuthService.register to create new student
     - Return student data without password
     - _Requirements: 1.1_
-  - [ ] 6.2 Implement POST /api/auth/login endpoint
+  - [x] 6.2 Implement POST /api/auth/login endpoint
+
+
     - Validate request body using loginSchema
     - Call AuthService.login to authenticate and generate token
     - Return token and student data
     - _Requirements: 1.2_
-  - [ ] 6.3 Implement POST /api/auth/logout endpoint
+  - [x] 6.3 Implement POST /api/auth/logout endpoint
+
+
     - Apply authentication middleware
     - Call AuthService.logout to invalidate session
     - Return success response
