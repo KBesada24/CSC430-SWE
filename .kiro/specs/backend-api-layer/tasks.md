@@ -134,7 +134,7 @@
     - Create removeRsvp method for canceling RSVPs
     - _Requirements: 5.4, 6.3, 6.4, 6.5_
 
-- [] 5. Implement middleware for cross-cutting concerns
+- [x] 5. Implement middleware for cross-cutting concerns
 
 
 
@@ -169,18 +169,25 @@
     - Return success response
     - _Requirements: 1.5_
 
-- [ ] 7. Build student API routes
-  - [ ] 7.1 Implement GET /api/students/[id] endpoint
+- [x] 7. Build student API routes
+
+
+  - [x] 7.1 Implement GET /api/students/[id] endpoint
+
+
     - Call StudentService.getById to retrieve profile
     - Return student data without password
     - _Requirements: 1.3_
-  - [ ] 7.2 Implement PATCH /api/students/[id] endpoint
+  - [x] 7.2 Implement PATCH /api/students/[id] endpoint
+
     - Apply authentication middleware
     - Verify authenticated student matches requested ID
     - Validate request body
     - Call StudentService.update to persist changes
     - _Requirements: 1.4_
-  - [ ] 7.3 Implement GET /api/students/[id]/memberships endpoint
+  - [x] 7.3 Implement GET /api/students/[id]/memberships endpoint
+
+
     - Apply authentication middleware
     - Call StudentService.getMemberships to get club list
     - Return memberships with club details
