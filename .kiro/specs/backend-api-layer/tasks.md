@@ -230,19 +230,27 @@
     - Call ClubService.delete to remove club
     - _Requirements: 4.5_
 
-- [ ] 9. Build club membership API routes
+- [x] 9. Build club membership API routes
+
+
+
+
   - [ ] 9.1 Implement GET /api/clubs/[id]/members endpoint
     - Parse query parameter for status filter
     - Call ClubService.getMembers with optional status filter
+
     - Return member list with student details
     - _Requirements: 4.3_
   - [ ] 9.2 Implement POST /api/clubs/[id]/members endpoint
     - Apply authentication middleware
     - Call ClubService.addMember with authenticated student ID
+
+
     - Handle duplicate membership error
     - Return created membership
     - _Requirements: 3.1, 3.5_
-  - [ ] 9.3 Implement PATCH /api/clubs/[id]/members/[studentId] endpoint
+  - [x] 9.3 Implement PATCH /api/clubs/[id]/members/[studentId] endpoint
+
     - Apply authentication middleware
     - Verify authenticated student is club admin
     - Validate status in request body
