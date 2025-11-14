@@ -193,29 +193,38 @@
     - Return memberships with club details
     - _Requirements: 3.4_
 
-- [ ] 8. Build club API routes
-  - [ ] 8.1 Implement GET /api/clubs endpoint
+- [x] 8. Build club API routes
+
+
+  - [x] 8.1 Implement GET /api/clubs endpoint
+
+
     - Parse query parameters for filters and pagination
     - Call ClubService.getAll with filters
     - Return paginated club list with member counts
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 9.3_
-  - [ ] 8.2 Implement POST /api/clubs endpoint
+  - [x] 8.2 Implement POST /api/clubs endpoint
+
     - Apply authentication middleware
     - Validate request body using createClubSchema
     - Call ClubService.create with authenticated student as admin
     - Return created club data
     - _Requirements: 4.1_
-  - [ ] 8.3 Implement GET /api/clubs/[id] endpoint
+  - [x] 8.3 Implement GET /api/clubs/[id] endpoint
+
+
     - Call ClubService.getById to retrieve club details
     - Include next event and member count in response
     - _Requirements: 2.4_
-  - [ ] 8.4 Implement PATCH /api/clubs/[id] endpoint
+  - [x] 8.4 Implement PATCH /api/clubs/[id] endpoint
+
     - Apply authentication middleware
     - Verify authenticated student is club admin
     - Validate request body using updateClubSchema
     - Call ClubService.update to persist changes
     - _Requirements: 4.2, 4.5_
-  - [ ] 8.5 Implement DELETE /api/clubs/[id] endpoint
+  - [x] 8.5 Implement DELETE /api/clubs/[id] endpoint
+
     - Apply authentication middleware
     - Verify authenticated student is club admin
     - Call ClubService.delete to remove club

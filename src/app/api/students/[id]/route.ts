@@ -20,9 +20,9 @@ const updateStudentSchema = z.object({
  */
 async function getStudentHandler(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const studentId = params.id;
+  const studentId = context.params.id;
 
   const studentService = new StudentService();
   const student = await studentService.getById(studentId);
@@ -43,9 +43,9 @@ async function getStudentHandler(
  */
 async function updateStudentHandler(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const studentId = params.id;
+  const studentId = context.params.id;
 
   // Authenticate request
   const authenticatedStudent = authenticateRequest(request);

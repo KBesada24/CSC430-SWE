@@ -11,9 +11,9 @@ import { successResponse } from '@/lib/utils/api-response';
  */
 async function getMembershipsHandler(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const studentId = params.id;
+  const studentId = context.params.id;
 
   // Authenticate request
   authenticateRequest(request);
