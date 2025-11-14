@@ -1,8 +1,9 @@
 import { createServerClient } from '@/lib/supabase/server';
-import { Tables, TablesInsert } from '@/types/supabase';
+import { Tables, TablesInsert, TablesUpdate } from '@/types/supabase';
 
 export type Rsvp = Tables<'rsvps'>;
 export type CreateRsvpData = TablesInsert<'rsvps'>;
+export type UpdateRsvpData = TablesUpdate<'rsvps'>;
 
 export class RsvpRepository {
   private supabase = createServerClient();
@@ -46,7 +47,8 @@ export class RsvpRepository {
     const { data: rsvps, error } = await this.supabase
       .from('rsvps')
       .select('*')
-      .eq('student_id', studentId);
+      .eq('student_id', studentId)
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw new Error(`Failed to find RSVPs by student: ${error.message}`);
@@ -59,7 +61,8 @@ export class RsvpRepository {
     const { data: rsvps, error } = await this.supabase
       .from('rsvps')
       .select('*')
-      .eq('event_id', eventId);
+      .eq('event_id', eventId)
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw new Error(`Failed to find RSVPs by event: ${error.message}`);

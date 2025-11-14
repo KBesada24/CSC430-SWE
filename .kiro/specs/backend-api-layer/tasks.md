@@ -47,14 +47,29 @@
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 4.1, 4.2_
 
 
-  - [ ] 3.3 Implement EventRepository with CRUD and query operations
+  - [x] 3.3 Implement EventRepository with CRUD and query operations
+
+
+
+
+
     - Create methods: create, findById, findAll with filters, findByClubId, update, delete
     - Implement getAttendeeCount helper method
     - _Requirements: 5.1, 5.3, 6.1, 6.2_
-  - [ ] 3.4 Implement MembershipRepository for club membership management
+  - [x] 3.4 Implement MembershipRepository for club membership management
+
+
+
+
+
     - Create methods: create, findByStudentAndClub, findByStudent, findByClub, updateStatus, delete
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 4.3, 4.4_
-  - [ ] 3.5 Implement RsvpRepository for event RSVP management
+  - [x] 3.5 Implement RsvpRepository for event RSVP management
+
+
+
+
+
     - Create methods: create, findByStudentAndEvent, findByStudent, findByEvent, delete
     - _Requirements: 6.3, 6.4, 6.5_
 

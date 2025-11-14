@@ -1,8 +1,10 @@
 import { createServerClient } from '@/lib/supabase/server';
-import { Tables, TablesInsert } from '@/types/supabase';
+import { Tables, TablesInsert, TablesUpdate } from '@/types/supabase';
 
 export type Membership = Tables<'memberships'>;
 export type CreateMembershipData = TablesInsert<'memberships'>;
+export type UpdateMembershipData = TablesUpdate<'memberships'>;
+
 export type MembershipStatus = 'pending' | 'active' | 'rejected';
 
 export class MembershipRepository {
@@ -48,7 +50,8 @@ export class MembershipRepository {
     const { data: memberships, error } = await this.supabase
       .from('memberships')
       .select('*')
-      .eq('student_id', studentId);
+      .eq('student_id', studentId)
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw new Error(`Failed to find memberships by student: ${error.message}`);
@@ -66,6 +69,8 @@ export class MembershipRepository {
     if (status) {
       query = query.eq('status', status);
     }
+
+    query = query.order('created_at', { ascending: false });
 
     const { data: memberships, error } = await query;
 
