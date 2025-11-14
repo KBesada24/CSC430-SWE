@@ -135,6 +135,9 @@
     - _Requirements: 5.4, 6.3, 6.4, 6.5_
 
 - [ ] 5. Implement middleware for cross-cutting concerns
+
+
+
   - Create authentication middleware to verify JWT tokens and attach student to request
   - Create authorization middleware to verify club admin permissions
   - Create validation middleware wrapper for Zod schema validation
