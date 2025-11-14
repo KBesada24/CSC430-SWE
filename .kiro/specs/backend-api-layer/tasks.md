@@ -235,13 +235,15 @@
 
 
 
-  - [ ] 9.1 Implement GET /api/clubs/[id]/members endpoint
+  - [x] 9.1 Implement GET /api/clubs/[id]/members endpoint
+
     - Parse query parameter for status filter
     - Call ClubService.getMembers with optional status filter
 
     - Return member list with student details
     - _Requirements: 4.3_
-  - [ ] 9.2 Implement POST /api/clubs/[id]/members endpoint
+  - [x] 9.2 Implement POST /api/clubs/[id]/members endpoint
+
     - Apply authentication middleware
     - Call ClubService.addMember with authenticated student ID
 
@@ -260,7 +262,8 @@
 
 
     - _Requirements: 3.2, 4.4_
-  - [ ] 9.4 Implement DELETE /api/clubs/[id]/members/[studentId] endpoint
+  - [x] 9.4 Implement DELETE /api/clubs/[id]/members/[studentId] endpoint
+
     - Apply authentication middleware
 
     - Verify authenticated student is member or admin
@@ -270,13 +273,15 @@
 - [x] 10. Build event API routes
 
 
-  - [ ] 10.1 Implement GET /api/events endpoint
+  - [x] 10.1 Implement GET /api/events endpoint
+
     - Parse query parameters for filters and pagination
 
     - Call EventService.getAll with filters
     - Return paginated event list with club details
     - _Requirements: 6.1, 6.2, 9.3_
-  - [ ] 10.2 Implement POST /api/events endpoint
+  - [x] 10.2 Implement POST /api/events endpoint
+
     - Apply authentication middleware
 
     - Validate request body using createEventSchema
@@ -287,12 +292,14 @@
 
 
 
-  - [ ] 10.3 Implement GET /api/events/[id] endpoint
+  - [x] 10.3 Implement GET /api/events/[id] endpoint
+
     - Call EventService.getById to retrieve event details
 
     - Include club info and attendee count in response
     - _Requirements: 6.1_
-  - [ ] 10.4 Implement PATCH /api/events/[id] endpoint
+  - [x] 10.4 Implement PATCH /api/events/[id] endpoint
+
     - Apply authentication middleware
     - Verify authenticated student is admin of event's club
 
@@ -304,7 +311,8 @@
 
 
 
-  - [ ] 10.5 Implement DELETE /api/events/[id] endpoint
+  - [x] 10.5 Implement DELETE /api/events/[id] endpoint
+
     - Apply authentication middleware
     - Verify authenticated student is admin of event's club
     - Call EventService.delete to remove event
@@ -312,31 +320,32 @@
 
     - _Requirements: 5.3_
 
-- [ ] 11. Build event RSVP API routes
-  - [ ] 11.1 Implement GET /api/events/[id]/rsvps endpoint
+- [x] 11. Build event RSVP API routes
+  - [x] 11.1 Implement GET /api/events/[id]/rsvps endpoint
     - Call EventService.getAttendees to get attendee list
     - Return list of students with RSVP details
     - _Requirements: 5.4_
-  - [ ] 11.2 Implement POST /api/events/[id]/rsvps endpoint
+  - [x] 11.2 Implement POST /api/events/[id]/rsvps endpoint
     - Apply authentication middleware
     - Call EventService.addRsvp with authenticated student ID
     - Handle duplicate RSVP error
     - Return created RSVP
     - _Requirements: 6.3, 6.5_
-  - [ ] 11.3 Implement DELETE /api/events/[id]/rsvps/[studentId] endpoint
+  - [x] 11.3 Implement DELETE /api/events/[id]/rsvps/[studentId] endpoint
     - Apply authentication middleware
     - Verify authenticated student matches studentId
     - Call EventService.removeRsvp to cancel RSVP
     - _Requirements: 6.4_
 
-- [ ] 12. Build statistics API routes
-  - [ ] 12.1 Implement GET /api/stats endpoint
+- [x] 12. Build statistics API routes
+
+  - [x] 12.1 Implement GET /api/stats endpoint
     - Query total club count from ClubRepository
     - Query total active membership count from MembershipRepository
     - Query upcoming events count (next 30 days) from EventRepository
     - Return platform statistics
     - _Requirements: 7.1, 7.2, 7.3_
-  - [ ] 12.2 Implement GET /api/stats/student/[id] endpoint
+  - [x] 12.2 Implement GET /api/stats/student/[id] endpoint
     - Apply authentication middleware
     - Verify authenticated student matches requested ID
     - Query student's active membership count
