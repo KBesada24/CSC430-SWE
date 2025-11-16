@@ -230,14 +230,14 @@
     - Add delete event button for club admins
     - _Requirements: 5.2, 5.3_
 
-- [ ] 16. Create profile page
-  - [ ] 16.1 Create profile page
+- [x] 16. Create profile page
+  - [x] 16.1 Create profile page
     - Create `src/app/profile/page.tsx`
     - Use useStudentProfile hook
     - Display user information
     - Show user's clubs and upcoming events
     - _Requirements: 10.1, 10.3_
-  - [ ] 16.2 Add profile editing
+  - [x] 16.2 Add profile editing
     - Create profile edit form
     - Use useUpdateProfile hook
     - Add validation
