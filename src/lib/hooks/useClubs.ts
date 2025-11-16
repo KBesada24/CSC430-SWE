@@ -12,6 +12,7 @@ export const clubKeys = {
   details: () => [...clubKeys.all, 'detail'] as const,
   detail: (id: string) => [...clubKeys.details(), id] as const,
   members: (id: string) => [...clubKeys.detail(id), 'members'] as const,
+  invite: (id: string) => [...clubKeys.detail(id), 'invite'] as const,
 };
 
 // Fetch clubs with filters
@@ -105,6 +106,32 @@ export function useUpdateClub() {
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to update club');
+    },
+  });
+}
+
+// Fetch club invite
+export function useClubInvite(clubId: string) {
+  return useQuery({
+    queryKey: clubKeys.invite(clubId),
+    queryFn: () => clubsApi.getInvite(clubId),
+    enabled: !!clubId,
+  });
+}
+
+// Join via invite mutation
+export function useJoinViaInvite() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (token: string) => clubsApi.joinViaInvite(token),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: clubKeys.detail(data.clubId) });
+      queryClient.invalidateQueries({ queryKey: clubKeys.lists() });
+      toast.success('Successfully joined club!');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to join club');
     },
   });
 }
