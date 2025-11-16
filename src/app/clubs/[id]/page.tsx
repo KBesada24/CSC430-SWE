@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useClub, useClubMembers, useJoinClub, useLeaveClub } from '@/lib/hooks/useClubs';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { useStudentMemberships } from '@/lib/hooks/useStudent';
+import { MembershipWithClub } from '@/types/api.types';
 import Header from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +25,7 @@ export default function ClubDetailPage() {
   const { mutate: joinClub, isPending: isJoining } = useJoinClub();
   const { mutate: leaveClub, isPending: isLeaving } = useLeaveClub();
   
-  const isJoined = memberships?.some(m => m.clubId === clubId && m.status === 'active');
+  const isJoined = memberships?.some((m: MembershipWithClub) => m.clubId === clubId && m.status === 'active');
   const isAdmin = club?.adminStudentId === user?.studentId;
 
   const handleJoinLeave = () => {

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { useStudentMemberships } from '@/lib/hooks/useStudent';
 import { useUpdateProfile } from '@/lib/hooks/useStudent';
+import { MembershipWithClub } from '@/types/api.types';
 import Header from '@/components/layout/Header';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { Button } from '@/components/ui/button';
@@ -43,7 +44,7 @@ function ProfileContent() {
     }
   };
 
-  const activeMemberships = memberships?.filter(m => m.status === 'active') || [];
+  const activeMemberships = memberships?.filter((m: MembershipWithClub) => m.status === 'active') || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -157,7 +158,7 @@ function ProfileContent() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {activeMemberships.map((membership) => (
+                  {activeMemberships.map((membership: MembershipWithClub) => (
                     <div
                       key={membership.clubId}
                       className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent cursor-pointer"
