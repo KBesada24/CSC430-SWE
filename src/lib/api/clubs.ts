@@ -14,6 +14,8 @@ import {
   MemberWithStudent,
   MembershipDto,
   UpdateMembershipStatusDto,
+  InviteDetails,
+  JoinViaInviteResponse,
 } from '@/types/api.types';
 
 export const clubsApi = {
@@ -100,5 +102,19 @@ export const clubsApi = {
    */
   leaveClub: async (clubId: string, studentId: string): Promise<void> => {
     return apiClient.delete(`/clubs/${clubId}/members/${studentId}`);
+  },
+
+  /**
+   * Get or generate invite link for a club
+   */
+  getInvite: async (clubId: string): Promise<InviteDetails> => {
+    return apiClient.get(`/clubs/${clubId}/invite`);
+  },
+
+  /**
+   * Join a club via invite token
+   */
+  joinViaInvite: async (token: string): Promise<JoinViaInviteResponse> => {
+    return apiClient.post(`/invites/${token}/join`);
   },
 };
