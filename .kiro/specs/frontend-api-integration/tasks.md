@@ -193,8 +193,8 @@
     - Show toast notification on success/error
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 9.5_
 
-- [ ] 13. Update ClubFilters component
-  - [ ] 13.1 Connect filters to API
+- [x] 13. Update ClubFilters component
+  - [x] 13.1 Connect filters to API
     - Update `src/components/clubs/ClubFilters.tsx`
     - Pass filter state to useClubs hook
     - Implement search functionality

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Calendar, Search, TrendingUp, Users } from "lucide-react";
 import Header from "@/components/layout/Header";
 import ClubCard from "@/components/clubs/ClubCard";
@@ -17,10 +18,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Page() {
   const { user, isAuthenticated } = useAuth();
+  const [selectedCategory, setSelectedCategory] = React.useState<string>('');
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
   
   // Fetch data
   const { data: clubsData, isLoading: clubsLoading } = useClubs(
-    undefined,
+    { category: selectedCategory || undefined, search: searchQuery || undefined },
     { page: 1, limit: 6 }
   );
   
@@ -111,7 +114,7 @@ export default function Page() {
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">All Clubs</h2>
               </div>
-              <ClubFilters />
+              <ClubFilters onFilterChange={setSelectedCategory} />
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
