@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { ClubService } from '@/lib/services/club.service';
+import { InviteService } from '@/lib/services/invite.service';
 import { authenticateRequest } from '@/lib/middleware/auth.middleware';
 import { validateQueryParams, validateRequest } from '@/lib/middleware/validation.middleware';
 import { withErrorHandler } from '@/lib/middleware/error.middleware';
@@ -47,7 +48,7 @@ async function getClubsHandler(request: NextRequest) {
 /**
  * POST /api/clubs
  * Creates a new club with authenticated student as admin
- * Requirements: 4.1
+ * Requirements: 1.2, 2.2, 2.5, 4.1
  */
 async function createClubHandler(request: NextRequest) {
   // Authenticate request
@@ -60,6 +61,10 @@ async function createClubHandler(request: NextRequest) {
   const clubService = new ClubService();
   const club = await clubService.create(validatedData, authenticatedStudent.studentId);
 
+  // Generate invite token for the new club
+  const inviteService = new InviteService();
+  const invite = await inviteService.getOrCreateInvite(club.club_id);
+
   return successResponse(
     {
       clubId: club.club_id,
@@ -71,6 +76,7 @@ async function createClubHandler(request: NextRequest) {
       createdAt: club.created_at,
       memberCount: club.member_count,
       nextEvent: club.next_event,
+      inviteToken: invite.token,
     },
     201
   );
