@@ -184,8 +184,8 @@
     - Show toast notification on success/error
     - _Requirements: 7.1, 7.2, 7.3, 9.5_
 
-- [ ] 12. Update EventCard component
-  - [ ] 12.1 Add RSVP functionality
+- [x] 12. Update EventCard component
+  - [x] 12.1 Add RSVP functionality
     - Update `src/components/events/EventCard.tsx`
     - Use useRsvpEvent and useCancelRsvp hooks
     - Show RSVP status badge

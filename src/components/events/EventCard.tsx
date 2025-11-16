@@ -5,6 +5,9 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/lib/contexts/AuthContext";
+import { useRsvpEvent, useCancelRsvp, useEventAttendees } from "@/lib/hooks/useEvents";
+import { useRouter } from "next/navigation";
 
 interface EventCardProps {
   id: string;
@@ -19,6 +22,7 @@ interface EventCardProps {
 }
 
 export default function EventCard({
+  id,
   title = "Sample Event",
   clubName = "Sample Club",
   date = "Jan 1, 2024",
@@ -26,8 +30,28 @@ export default function EventCard({
   location = "Main Hall",
   attendeeCount = 0,
   maxAttendees,
-  isRsvped = false,
 }: EventCardProps) {
+  const { user, isAuthenticated } = useAuth();
+  const router = useRouter();
+  const { mutate: rsvp, isPending: isRsvping } = useRsvpEvent();
+  const { mutate: cancelRsvp, isPending: isCanceling } = useCancelRsvp();
+  const { data: attendees } = useEventAttendees(id);
+  
+  const isRsvped = attendees?.some(a => a.studentId === user?.studentId);
+  const isLoading = isRsvping || isCanceling;
+
+  const handleRsvpClick = () => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+    
+    if (isRsvped && user) {
+      cancelRsvp({ eventId: id, studentId: user.studentId });
+    } else {
+      rsvp(id);
+    }
+  };
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
@@ -66,8 +90,13 @@ export default function EventCard({
       </CardContent>
 
       <CardFooter>
-        <Button className="w-full" variant={isRsvped ? "outline" : "default"}>
-          {isRsvped ? "Cancel RSVP" : "RSVP"}
+        <Button 
+          className="w-full" 
+          variant={isRsvped ? "outline" : "default"}
+          onClick={handleRsvpClick}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Loading...' : isRsvped ? "Cancel RSVP" : "RSVP"}
         </Button>
       </CardFooter>
     </Card>
