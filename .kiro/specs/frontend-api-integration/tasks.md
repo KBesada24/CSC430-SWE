@@ -246,26 +246,26 @@
 
 ## Phase 6: Loading and Error States
 
-- [ ] 17. Create loading components
-  - [ ] 17.1 Create skeleton components
+- [x] 17. Create loading components
+  - [x] 17.1 Create skeleton components
     - Create `src/components/ui/ClubCardSkeleton.tsx`
     - Create `src/components/ui/EventCardSkeleton.tsx`
     - Create `src/components/ui/StatsCardSkeleton.tsx`
     - _Requirements: 9.1_
-  - [ ] 17.2 Add loading states to all data-fetching components
+  - [x] 17.2 Add loading states to all data-fetching components
     - Update all components to show skeletons while loading
     - _Requirements: 9.1_
 
-- [ ] 18. Create error components
-  - [ ] 18.1 Create error boundary
+- [x] 18. Create error components
+  - [x] 18.1 Create error boundary
     - Create `src/components/ErrorBoundary.tsx`
     - Handle unexpected errors gracefully
     - _Requirements: 9.2_
-  - [ ] 18.2 Create error display components
+  - [x] 18.2 Create error display components
     - Create `src/components/ui/ErrorMessage.tsx`
     - Add retry functionality
     - _Requirements: 9.2, 9.4_
-  - [ ] 18.3 Add error handling to all components
+  - [x] 18.3 Add error handling to all components
     - Display user-friendly error messages
     - Add retry buttons where appropriate
     - _Requirements: 9.2, 9.3, 9.4_
