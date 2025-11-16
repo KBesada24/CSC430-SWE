@@ -156,20 +156,20 @@
 
 ## Phase 4: Replace Static Data
 
-- [ ] 10. Update home page with real data
-  - [ ] 10.1 Replace static club data
+- [x] 10. Update home page with real data
+  - [x] 10.1 Replace static club data
     - Update `src/app/page.tsx` to use useClubs hook
     - Remove mockClubs array
     - Add loading skeleton for clubs
     - Add error handling
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 9.1, 9.2_
-  - [ ] 10.2 Replace static event data
+  - [x] 10.2 Replace static event data
     - Update `src/app/page.tsx` to use useEvents hook
     - Remove mockEvents array
     - Add loading skeleton for events
     - Add error handling
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 9.1, 9.2_
-  - [ ] 10.3 Replace static statistics
+  - [x] 10.3 Replace static statistics
     - Update stats section to use usePlatformStats and useStudentStats
     - Remove hardcoded stat values
     - Add loading skeleton for stats
