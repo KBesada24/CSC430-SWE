@@ -6,12 +6,13 @@ import { useAuth } from '@/lib/contexts/AuthContext';
 import { useStudentMemberships } from '@/lib/hooks/useStudent';
 import { MembershipWithClub } from '@/types/api.types';
 import Header from '@/components/layout/Header';
+import ClubInviteSection from '@/components/clubs/ClubInviteSection';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Calendar, MapPin, Users, ArrowLeft } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Calendar, Users, ArrowLeft } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 export default function ClubDetailPage() {
   const params = useParams();
@@ -193,6 +194,9 @@ export default function ClubDetailPage() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Invite Section - Only visible to admin */}
+            {isAdmin && <ClubInviteSection clubId={clubId} />}
           </div>
         </div>
       </div>
