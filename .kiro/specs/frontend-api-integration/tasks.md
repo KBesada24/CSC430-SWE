@@ -203,8 +203,8 @@
 
 ## Phase 5: Create Detail Pages
 
-- [ ] 14. Create club detail page
-  - [ ] 14.1 Create club detail page
+- [x] 14. Create club detail page
+  - [x] 14.1 Create club detail page
     - Create `src/app/clubs/[id]/page.tsx`
     - Use useClub hook to fetch club data
     - Display club information, members, and events
