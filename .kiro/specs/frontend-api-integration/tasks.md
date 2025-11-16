@@ -74,27 +74,27 @@
 
 ## Phase 2: Authentication Implementation
 
-- [ ] 4. Create authentication pages
-  - [ ] 4.1 Create login page
+- [x] 4. Create authentication pages
+  - [x] 4.1 Create login page
     - Create `src/app/(auth)/login/page.tsx`
     - Create `src/components/auth/LoginForm.tsx`
     - Implement form validation with Zod
     - Add loading and error states
     - _Requirements: 1.1, 1.3_
-  - [ ] 4.2 Create register page
+  - [x] 4.2 Create register page
     - Create `src/app/(auth)/register/page.tsx`
     - Create `src/components/auth/RegisterForm.tsx`
     - Implement form validation with Zod
     - Add loading and error states
     - _Requirements: 1.1_
-  - [ ] 4.3 Create protected route wrapper
+  - [x] 4.3 Create protected route wrapper
     - Create `src/components/auth/ProtectedRoute.tsx`
     - Redirect unauthenticated users to login
     - Show loading state while checking auth
     - _Requirements: 1.1, 1.5_
 
-- [ ] 5. Update header with authentication
-  - [ ] 5.1 Update Header component
+- [x] 5. Update header with authentication
+  - [x] 5.1 Update Header component
     - Display user name when authenticated
     - Show login/register buttons when not authenticated
     - Update profile dropdown with real user data
@@ -103,17 +103,17 @@
 
 ## Phase 3: Data Fetching Hooks
 
-- [ ] 6. Create club data hooks
-  - [ ] 6.1 Create useClubs hook
+- [x] 6. Create club data hooks
+  - [x] 6.1 Create useClubs hook
     - Create `src/lib/hooks/useClubs.ts`
     - Implement fetching clubs with filters and pagination
     - Add loading, error, and success states
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3_
-  - [ ] 6.2 Create useClub hook
+  - [x] 6.2 Create useClub hook
     - Implement fetching single club details
     - Include member count and next event
     - _Requirements: 3.1, 3.2, 4.4_
-  - [ ] 6.3 Create club mutation hooks
+  - [x] 6.3 Create club mutation hooks
     - Create useJoinClub hook for joining clubs
     - Create useLeaveClub hook for leaving clubs
     - Create useCreateClub hook for creating clubs
