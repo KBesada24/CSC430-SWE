@@ -175,8 +175,8 @@
     - Add loading skeleton for stats
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 9.1_
 
-- [ ] 11. Update ClubCard component
-  - [ ] 11.1 Add join/leave functionality
+- [x] 11. Update ClubCard component
+  - [x] 11.1 Add join/leave functionality
     - Update `src/components/clubs/ClubCard.tsx`
     - Use useJoinClub and useLeaveClub hooks
     - Show correct button state based on membership

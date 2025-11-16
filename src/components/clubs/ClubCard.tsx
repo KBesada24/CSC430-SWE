@@ -5,6 +5,10 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/lib/contexts/AuthContext";
+import { useJoinClub, useLeaveClub } from "@/lib/hooks/useClubs";
+import { useStudentMemberships } from "@/lib/hooks/useStudent";
+import { useRouter } from "next/navigation";
 
 interface ClubCardProps {
   id: string;
@@ -21,14 +25,35 @@ interface ClubCardProps {
 }
 
 export default function ClubCard({
+  id,
   name = "Sample Club",
   category = "Academic",
   description = "Join us for exciting activities and events!",
   memberCount = 0,
   coverImage = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
   nextEvent,
-  isJoined = false,
 }: ClubCardProps) {
+  const { user, isAuthenticated } = useAuth();
+  const router = useRouter();
+  const { mutate: joinClub, isPending: isJoining } = useJoinClub();
+  const { mutate: leaveClub, isPending: isLeaving } = useLeaveClub();
+  const { data: memberships } = useStudentMemberships(user?.studentId || '');
+  
+  const isJoined = memberships?.some(m => m.clubId === id && m.status === 'active');
+  const isLoading = isJoining || isLeaving;
+
+  const handleClick = () => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+
+    if (isJoined) {
+      router.push(`/clubs/${id}`);
+    } else {
+      joinClub(id);
+    }
+  };
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
       <div className="relative h-48 overflow-hidden">
@@ -68,8 +93,13 @@ export default function ClubCard({
       )}
 
       <CardFooter className="pt-3">
-        <Button className="w-full" variant={isJoined ? "outline" : "default"}>
-          {isJoined ? "View Club" : "Join Club"}
+        <Button 
+          className="w-full" 
+          variant={isJoined ? "outline" : "default"}
+          onClick={handleClick}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Loading...' : isJoined ? "View Club" : "Join Club"}
         </Button>
       </CardFooter>
     </Card>
