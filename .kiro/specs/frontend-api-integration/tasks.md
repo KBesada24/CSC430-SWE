@@ -146,8 +146,8 @@
     - Create useStudentStats hook
     - _Requirements: 3.1, 3.2, 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 9. Create student profile hooks
-  - [ ] 9.1 Create useStudent hooks
+- [x] 9. Create student profile hooks
+  - [x] 9.1 Create useStudent hooks
     - Create `src/lib/hooks/useStudent.ts`
     - Create useStudentProfile hook
     - Create useUpdateProfile hook
