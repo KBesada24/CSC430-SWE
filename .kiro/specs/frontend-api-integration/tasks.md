@@ -217,8 +217,8 @@
     - Add create event button for admins
     - _Requirements: 7.4, 7.5_
 
-- [ ] 15. Create event detail page
-  - [ ] 15.1 Create event detail page
+- [x] 15. Create event detail page
+  - [x] 15.1 Create event detail page
     - Create `src/app/events/[id]/page.tsx`
     - Use useEvent hook to fetch event data
     - Display event information and attendees
