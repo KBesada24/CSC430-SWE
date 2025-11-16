@@ -272,52 +272,52 @@
 
 ## Phase 7: Polish and Optimization
 
-- [ ] 19. Add toast notifications
-  - [ ] 19.1 Set up toast provider
+- [x] 19. Add toast notifications
+  - [x] 19.1 Set up toast provider
     - Add Sonner Toaster to root layout
     - _Requirements: 9.5_
-  - [ ] 19.2 Add toasts for all actions
+  - [x] 19.2 Add toasts for all actions
     - Show success toasts for join club, RSVP, etc.
     - Show error toasts for failed actions
     - _Requirements: 9.5_
 
-- [ ] 20. Implement optimistic updates
-  - [ ] 20.1 Add optimistic updates to mutations
+- [x] 20. Implement optimistic updates
+  - [x] 20.1 Add optimistic updates to mutations
     - Implement for join/leave club
     - Implement for RSVP/cancel RSVP
     - Implement for member count updates
     - _Requirements: 3.5, 7.1, 8.1_
 
-- [ ] 21. Add data prefetching
-  - [ ] 21.1 Prefetch on hover
+- [x] 21. Add data prefetching
+  - [x] 21.1 Prefetch on hover
     - Prefetch club details on ClubCard hover
     - Prefetch event details on EventCard hover
     - _Requirements: Performance optimization_
 
-- [ ] 22. Implement pagination
-  - [ ] 22.1 Add pagination to club list
+- [x] 22. Implement pagination
+  - [x] 22.1 Add pagination to club list
     - Add pagination controls
     - Update useClubs hook to handle pagination
     - _Requirements: 3.4, 4.1_
-  - [ ] 22.2 Add pagination to event list
+  - [x] 22.2 Add pagination to event list
     - Add pagination controls
     - Update useEvents hook to handle pagination
     - _Requirements: 3.4, 5.1_
 
-- [ ] 23. Add search debouncing
-  - [ ] 23.1 Debounce search inputs
+- [x] 23. Add search debouncing
+  - [x] 23.1 Debounce search inputs
     - Add debounce to club search
     - Add debounce to event search
     - _Requirements: 4.3, Performance optimization_
 
-- [ ] 24. Final testing and bug fixes
-  - [ ] 24.1 Test all user flows
+- [x] 24. Final testing and bug fixes
+  - [x] 24.1 Test all user flows
     - Test registration and login
     - Test joining and leaving clubs
     - Test RSVP and cancel RSVP
     - Test profile updates
     - _Requirements: All_
-  - [ ] 24.2 Fix any bugs found
+  - [x] 24.2 Fix any bugs found
     - Address edge cases
     - Fix UI issues
     - Improve error messages
