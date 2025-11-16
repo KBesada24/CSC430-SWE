@@ -53,6 +53,7 @@
 - [x] 3. Create authentication infrastructure
 
 
+
   - [x] 3.1 Create auth utilities
 
     - Create `src/lib/utils/auth.ts` for token management
