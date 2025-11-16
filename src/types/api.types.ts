@@ -161,6 +161,27 @@ export interface UpdateMembershipStatusDto {
 }
 
 // ============================================================================
+// Invite DTOs
+// ============================================================================
+
+export interface InviteToken {
+  tokenId: string;
+  clubId: string;
+  token: string;
+  createdAt: string;
+}
+
+export interface InviteDetails {
+  inviteUrl: string;
+  token: string;
+}
+
+export interface JoinViaInviteResponse {
+  clubId: string;
+  membership: MembershipDto;
+}
+
+// ============================================================================
 // Event DTOs
 // ============================================================================
 
@@ -311,3 +332,7 @@ export type CancelRsvpResponse = ApiResponse<{ message: string }>;
 // Stats endpoints
 export type GetPlatformStatsResponse = ApiResponse<PlatformStats>;
 export type GetStudentStatsResponse = ApiResponse<StudentStats>;
+
+// Invite endpoints
+export type GetInviteResponse = ApiResponse<InviteDetails>;
+export type JoinViaInviteApiResponse = ApiResponse<JoinViaInviteResponse>;
