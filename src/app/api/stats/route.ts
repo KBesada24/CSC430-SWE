@@ -18,10 +18,7 @@ async function getStatsHandler(request: NextRequest) {
   // Get total club count
   const { total: totalClubs } = await clubRepository.findAll({}, { page: 1, limit: 1 });
 
-  // Get total active membership count
-  const activeMemberships = await membershipRepository.findByClub('', 'active');
-  // Note: This is a workaround - we need a better way to count all active memberships
-  // For now, we'll query all clubs and sum their member counts
+  // Get total active membership count by summing member counts from all clubs
   const allClubs = await clubRepository.findAll({}, { page: 1, limit: 1000 });
   let totalMembers = 0;
   for (const club of allClubs.clubs) {
