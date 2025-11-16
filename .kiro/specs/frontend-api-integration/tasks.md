@@ -139,8 +139,8 @@
     - Implement optimistic updates
     - _Requirements: 3.5, 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 8. Create statistics hooks
-  - [ ] 8.1 Create useStats hooks
+- [x] 8. Create statistics hooks
+  - [x] 8.1 Create useStats hooks
     - Create `src/lib/hooks/useStats.ts`
     - Create usePlatformStats hook
     - Create useStudentStats hook
