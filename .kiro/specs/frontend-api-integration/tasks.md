@@ -121,17 +121,17 @@
     - Implement optimistic updates
     - _Requirements: 3.5, 7.1, 7.2, 7.3_
 
-- [ ] 7. Create event data hooks
-  - [ ] 7.1 Create useEvents hook
+- [x] 7. Create event data hooks
+  - [x] 7.1 Create useEvents hook
     - Create `src/lib/hooks/useEvents.ts`
     - Implement fetching events with filters and pagination
     - Add loading, error, and success states
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 5.1, 5.2_
-  - [ ] 7.2 Create useEvent hook
+  - [x] 7.2 Create useEvent hook
     - Implement fetching single event details
     - Include club info and attendee count
     - _Requirements: 3.1, 3.2, 5.3_
-  - [ ] 7.3 Create event mutation hooks
+  - [x] 7.3 Create event mutation hooks
     - Create useRsvpEvent hook for RSVPing
     - Create useCancelRsvp hook for canceling RSVPs
     - Create useCreateEvent hook for creating events
