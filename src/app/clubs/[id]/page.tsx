@@ -210,7 +210,11 @@ export default function ClubDetailPage() {
                 </Button>
                 {isAdmin && (
                   <>
-                    <Button className="w-full mt-2" variant="secondary">
+                    <Button 
+                      className="w-full mt-2" 
+                      variant="secondary"
+                      onClick={() => router.push(`/clubs/${clubId}/manage`)}
+                    >
                       Manage Club
                     </Button>
                     <AlertDialog>

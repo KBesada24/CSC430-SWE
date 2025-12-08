@@ -45,6 +45,7 @@ function ProfileContent() {
   };
 
   const activeMemberships = memberships?.filter((m: MembershipWithClub) => m.status === 'active') || [];
+  const pendingMemberships = memberships?.filter((m: MembershipWithClub) => m.status === 'pending') || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -184,6 +185,42 @@ function ProfileContent() {
               )}
             </CardContent>
           </Card>
+
+          {/* Pending Applications */}
+          {pendingMemberships.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Pending Applications ({pendingMemberships.length})</CardTitle>
+                <CardDescription>Club memberships awaiting approval</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {pendingMemberships.map((membership: MembershipWithClub) => (
+                    <div
+                      key={membership.clubId}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent cursor-pointer opacity-75"
+                      onClick={() => router.push(`/clubs/${membership.clubId}`)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarFallback>
+                            {membership.club.name[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium">{membership.club.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {membership.club.category}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="text-yellow-600 border-yellow-600">Pending</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

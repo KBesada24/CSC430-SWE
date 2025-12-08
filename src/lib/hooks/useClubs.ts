@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { clubsApi } from '../api/clubs';
 import { ClubFilters, Pagination } from '@/types/api.types';
 import { toast } from 'sonner';
+import { useAuth } from '../contexts/AuthContext';
+import { studentKeys } from './useStudent';
 
 // Query keys
 export const clubKeys = {
@@ -44,12 +46,16 @@ export function useClubMembers(clubId: string, status?: 'pending' | 'active' | '
 // Join club mutation
 export function useJoinClub() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation({
     mutationFn: (clubId: string) => clubsApi.joinClub(clubId),
     onSuccess: (_, clubId) => {
       queryClient.invalidateQueries({ queryKey: clubKeys.detail(clubId) });
       queryClient.invalidateQueries({ queryKey: clubKeys.lists() });
+      if (user?.studentId) {
+        queryClient.invalidateQueries({ queryKey: studentKeys.memberships(user.studentId) });
+      }
       toast.success('Successfully joined club!');
     },
     onError: (error: any) => {
@@ -61,6 +67,7 @@ export function useJoinClub() {
 // Leave club mutation
 export function useLeaveClub() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation({
     mutationFn: ({ clubId, studentId }: { clubId: string; studentId: string }) =>
@@ -68,6 +75,9 @@ export function useLeaveClub() {
     onSuccess: (_, { clubId }) => {
       queryClient.invalidateQueries({ queryKey: clubKeys.detail(clubId) });
       queryClient.invalidateQueries({ queryKey: clubKeys.lists() });
+      if (user?.studentId) {
+        queryClient.invalidateQueries({ queryKey: studentKeys.memberships(user.studentId) });
+      }
       toast.success('Left club successfully');
     },
     onError: (error: any) => {
@@ -132,6 +142,31 @@ export function useJoinViaInvite() {
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to join club');
+    },
+  });
+}
+
+// Update membership status mutation
+export function useUpdateMembershipStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ 
+      clubId, 
+      studentId, 
+      status 
+    }: { 
+      clubId: string; 
+      studentId: string; 
+      status: 'active' | 'rejected' 
+    }) => clubsApi.updateMemberStatus(clubId, studentId, { status }),
+    onSuccess: (_, { clubId, studentId }) => {
+      queryClient.invalidateQueries({ queryKey: clubKeys.members(clubId) });
+      queryClient.invalidateQueries({ queryKey: studentKeys.memberships(studentId) });
+      toast.success('Membership status updated successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to update membership status');
     },
   });
 }

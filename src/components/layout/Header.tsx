@@ -23,7 +23,10 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
+          <div 
+            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => router.push('/')}
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-lg">
               EC
             </div>
@@ -87,7 +90,9 @@ export default function Header() {
                 <DropdownMenuItem onClick={() => router.push('/profile')}>
                   Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem>My Clubs</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/profile')}>
+                  My Clubs
+                </DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 {(user?.role === 'university_admin' || (user as any)?.role === 'admin' || (user as any)?.isAdmin) && (
                   <DropdownMenuItem onClick={() => router.push('/admin')}>
