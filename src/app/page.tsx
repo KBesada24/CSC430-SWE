@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { Calendar, Search, TrendingUp, Users } from "lucide-react";
 import Header from "@/components/layout/Header";
 import ClubCard from "@/components/clubs/ClubCard";
@@ -16,10 +16,42 @@ import { usePlatformStats, useStudentStats } from "@/lib/hooks/useStats";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Debounce hook for search
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
+
+  React.useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 export default function Page() {
   const { user, isAuthenticated } = useAuth();
   const [selectedCategory, setSelectedCategory] = React.useState<string>('');
   const [searchQuery, setSearchQuery] = React.useState<string>('');
+  const [heroSearchInput, setHeroSearchInput] = React.useState<string>('');
+  const clubsSectionRef = useRef<HTMLElement>(null);
+  
+  // Debounce the hero search input by 300ms
+  const debouncedHeroSearch = useDebounce(heroSearchInput, 300);
+  
+  // Sync debounced hero search to the main search query
+  React.useEffect(() => {
+    setSearchQuery(debouncedHeroSearch);
+  }, [debouncedHeroSearch]);
+
+  // Scroll to clubs section and focus on browsing
+  const handleExploreClubs = useCallback(() => {
+    clubsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
   
   // Fetch data
   const { data: clubsData, isLoading: clubsLoading } = useClubs(
@@ -57,9 +89,11 @@ export default function Page() {
                 <Input
                   placeholder="Search for clubs..."
                   className="pl-10 h-12"
+                  value={heroSearchInput}
+                  onChange={(e) => setHeroSearchInput(e.target.value)}
                 />
               </div>
-              <Button size="lg" className="h-12">
+              <Button size="lg" className="h-12" onClick={handleExploreClubs}>
                 Explore Clubs
               </Button>
             </div>
@@ -75,20 +109,30 @@ export default function Page() {
             value={platformStats?.totalClubs.toString() || '0'}
             description="Across all categories"
             icon={Users}
-            trend={{ value: 12, isPositive: true }}
+            trend={platformStats?.trends ? { 
+              value: platformStats.trends.clubsChange, 
+              isPositive: platformStats.trends.clubsChange >= 0 
+            } : undefined}
           />
           <StatsCard
             title="Total Members"
             value={platformStats?.totalMembers.toLocaleString() || '0'}
             description="Students engaged"
             icon={TrendingUp}
-            trend={{ value: 8, isPositive: true }}
+            trend={platformStats?.trends ? { 
+              value: platformStats.trends.membersChange, 
+              isPositive: platformStats.trends.membersChange >= 0 
+            } : undefined}
           />
           <StatsCard
             title="Upcoming Events"
             value={platformStats?.upcomingEvents.toString() || '0'}
             description="This month"
             icon={Calendar}
+            trend={platformStats?.trends ? { 
+              value: platformStats.trends.eventsChange, 
+              isPositive: platformStats.trends.eventsChange >= 0 
+            } : undefined}
           />
           {isAuthenticated && (
             <StatsCard
@@ -102,7 +146,7 @@ export default function Page() {
       </section>
 
       {/* Main Content */}
-      <section className="container px-4 py-8">
+      <section ref={clubsSectionRef} className="container px-4 py-8">
         <Tabs defaultValue="clubs" className="space-y-6">
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="clubs">Browse Clubs</TabsTrigger>

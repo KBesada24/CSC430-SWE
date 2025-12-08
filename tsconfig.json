@@ -18,6 +18,20 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "downlevelIteration": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": [
+      "node",
+      "react",
+      "react-dom",
+      "bcrypt",
+      "cookie",
+      "jsonwebtoken",
+      "ms",
+      "phoenix",
+      "prop-types",
+      "ws"
+    ],
     "plugins": [
       {
         "name": "next"

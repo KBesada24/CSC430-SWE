@@ -108,4 +108,31 @@ export class MembershipRepository {
       throw new Error(`Failed to delete membership: ${error.message}`);
     }
   }
+
+  async countAllActiveMembers(): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('memberships')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active');
+
+    if (error) {
+      throw new Error(`Failed to count active memberships: ${error.message}`);
+    }
+
+    return count || 0;
+  }
+
+  async countRecentMemberships(since: Date): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('memberships')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', since.toISOString())
+      .eq('status', 'active');
+
+    if (error) {
+      throw new Error(`Failed to count recent memberships: ${error.message}`);
+    }
+
+    return count || 0;
+  }
 }

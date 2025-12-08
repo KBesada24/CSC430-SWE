@@ -89,6 +89,11 @@ export default function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuItem>My Clubs</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
+                {(user?.role === 'university_admin' || (user as any)?.role === 'admin' || (user as any)?.isAdmin) && (
+                  <DropdownMenuItem onClick={() => router.push('/admin')}>
+                    Admin Dashboard
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
               </DropdownMenuContent>

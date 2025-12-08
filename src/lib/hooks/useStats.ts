@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { statsApi } from '../api/stats';
+import { useAuth } from '../contexts/AuthContext';
 
 // Query keys
 export const statsKeys = {
@@ -17,9 +18,10 @@ export function usePlatformStats() {
 
 // Fetch student statistics
 export function useStudentStats(studentId: string) {
+  const { isLoading: authLoading, isAuthenticated } = useAuth();
   return useQuery({
     queryKey: statsKeys.student(studentId),
     queryFn: () => statsApi.getStudentStats(studentId),
-    enabled: !!studentId,
+    enabled: !!studentId && !authLoading && isAuthenticated,
   });
 }

@@ -54,8 +54,26 @@ CREATE INDEX IF NOT EXISTS idx_memberships_student ON public.memberships(student
 CREATE INDEX IF NOT EXISTS idx_memberships_club ON public.memberships(club_id);
 CREATE INDEX IF NOT EXISTS idx_memberships_status ON public.memberships(status);
 
-ALTER PUBLICATION supabase_realtime ADD TABLE public.students;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.clubs;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.events;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.memberships;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.rsvps;
+-- Add tables to supabase_realtime publication if not already present
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'students') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.students;
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'clubs') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.clubs;
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'events') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.events;
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'memberships') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.memberships;
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'rsvps') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.rsvps;
+  END IF;
+END $$;

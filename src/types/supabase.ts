@@ -23,6 +23,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           name: string
+          status: string | null
           updated_at: string | null
         }
         Insert: {
@@ -33,6 +34,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           name: string
+          status?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -43,6 +45,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           name?: string
+          status?: string | null
           updated_at?: string | null
         }
         Relationships: [
@@ -93,6 +96,57 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "clubs"
             referencedColumns: ["club_id"]
+          },
+        ]
+      }
+      invite_tokens: {
+        Row: {
+          token_id: string
+          club_id: string
+          token: string
+          created_at: string
+          expires_at: string
+          used_at: string | null
+          used_by_student_id: string | null
+          max_uses: number | null
+          uses_count: number
+        }
+        Insert: {
+          token_id?: string
+          club_id: string
+          token: string
+          created_at?: string
+          expires_at: string
+          used_at?: string | null
+          used_by_student_id?: string | null
+          max_uses?: number | null
+          uses_count?: number
+        }
+        Update: {
+          token_id?: string
+          club_id?: string
+          token?: string
+          created_at?: string
+          expires_at?: string
+          used_at?: string | null
+          used_by_student_id?: string | null
+          max_uses?: number | null
+          uses_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invite_tokens_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["club_id"]
+          },
+          {
+            foreignKeyName: "invite_tokens_used_by_student_id_fkey"
+            columns: ["used_by_student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["student_id"]
           },
         ]
       }
@@ -175,6 +229,7 @@ export type Database = {
           first_name: string
           last_name: string
           password_hash: string
+          role: string | null
           student_id: string
           updated_at: string | null
         }
@@ -184,6 +239,7 @@ export type Database = {
           first_name: string
           last_name: string
           password_hash: string
+          role?: string | null
           student_id?: string
           updated_at?: string | null
         }
@@ -193,6 +249,7 @@ export type Database = {
           first_name?: string
           last_name?: string
           password_hash?: string
+          role?: string | null
           student_id?: string
           updated_at?: string | null
         }

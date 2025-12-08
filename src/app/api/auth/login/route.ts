@@ -29,6 +29,7 @@ async function loginHandler(request: NextRequest) {
       email: loginResponse.student.email,
       firstName: loginResponse.student.first_name,
       lastName: loginResponse.student.last_name,
+      role: loginResponse.student.role,
     },
   });
 }

@@ -7,6 +7,7 @@ import { AuthenticationError } from './error-handler';
 export interface JwtPayload {
   studentId: string;
   email: string;
+  role?: 'student' | 'club_admin' | 'university_admin';
 }
 
 /**

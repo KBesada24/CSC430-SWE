@@ -84,7 +84,7 @@ export default function EventCard({
         <div className="flex items-center gap-2 text-sm">
           <Users className="h-4 w-4 text-muted-foreground" />
           <span>
-            {attendeeCount} {maxAttendees ? `/ ${maxAttendees}` : ""} attending
+            {attendees?.length ?? attendeeCount} {maxAttendees ? `/ ${maxAttendees}` : ""} attending
           </span>
         </div>
       </CardContent>

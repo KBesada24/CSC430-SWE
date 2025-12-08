@@ -22,6 +22,7 @@ export interface LoginResponse {
     first_name: string;
     last_name: string;
     created_at: string | null;
+    role: 'student' | 'club_admin' | 'university_admin';
   };
 }
 
@@ -30,6 +31,7 @@ export interface StudentResponse {
   email: string;
   first_name: string;
   last_name: string;
+  role: 'student' | 'club_admin' | 'university_admin';
   created_at: string | null;
 }
 
@@ -67,6 +69,7 @@ export class AuthService {
       email: student.email,
       first_name: student.first_name,
       last_name: student.last_name,
+      role: student.role as 'student' | 'club_admin' | 'university_admin',
       created_at: student.created_at,
     };
   }
@@ -91,6 +94,7 @@ export class AuthService {
     const token = generateToken({
       studentId: student.student_id,
       email: student.email,
+      role: student.role as 'student' | 'club_admin' | 'university_admin',
     });
 
     // Return token and student data
@@ -101,6 +105,7 @@ export class AuthService {
         email: student.email,
         first_name: student.first_name,
         last_name: student.last_name,
+        role: student.role as 'student' | 'club_admin' | 'university_admin',
         created_at: student.created_at,
       },
     };
@@ -140,6 +145,7 @@ export class AuthService {
       email: student.email,
       first_name: student.first_name,
       last_name: student.last_name,
+      role: student.role as 'student' | 'club_admin' | 'university_admin',
       created_at: student.created_at,
     };
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { useCreateClub } from '@/lib/hooks/useClubs';
@@ -32,11 +32,23 @@ export default function CreateClubPage() {
     category: '',
     coverPhotoUrl: '',
   });
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { mutate: createClub, isPending } = useCreateClub();
+
+  // Cleanup preview URL on unmount or change
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   // Redirect if not authenticated
   if (!isAuthenticated) {
@@ -70,19 +82,59 @@ export default function CreateClubPage() {
       return;
     }
 
-    createClub(
-      {
-        name: formData.name,
-        description: formData.description || undefined,
-        category: formData.category,
-        coverPhotoUrl: formData.coverPhotoUrl || undefined,
-      },
-      {
-        onSuccess: (data) => {
-          router.push(`/clubs/${data.clubId}`);
-        },
+    try {
+      let finalCoverPhotoUrl = formData.coverPhotoUrl;
+
+        if (file) {
+        setIsUploading(true);
+        
+        // Use our proxy API to upload
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+
+        const token = localStorage.getItem('eagleconnect_auth_token'); // Get raw token for header
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: uploadFormData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to upload image');
+        }
+
+        const data = await response.json();
+        finalCoverPhotoUrl = data.data.url;
       }
-    );
+
+      createClub(
+        {
+          name: formData.name,
+          description: formData.description || undefined,
+          category: formData.category,
+          coverPhotoUrl: finalCoverPhotoUrl || undefined,
+        },
+        {
+          onSuccess: (data) => {
+            router.push(`/clubs/${data.clubId}`);
+          },
+          onError: (error) => {
+             // Handle creation error
+             console.error("Creation failed", error);
+             setIsUploading(false);
+          }
+        }
+      );
+    } catch (error: any) {
+      console.error('Error creating club:', error);
+      const errorMessage = typeof error === 'string' ? error : error.message || JSON.stringify(error);
+      setErrors({ ...errors, form: errorMessage || 'Failed to create club. Please try again.' });
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -163,18 +215,66 @@ export default function CreateClubPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="coverPhotoUrl">Cover Photo URL</Label>
-                <Input
-                  id="coverPhotoUrl"
-                  type="url"
-                  value={formData.coverPhotoUrl}
-                  onChange={(e) => setFormData({ ...formData, coverPhotoUrl: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Optional: Add a URL to an image for your club cover
-                </p>
+                <Label htmlFor="coverPhoto">Cover Photo (Optional)</Label>
+                <div className="flex flex-col gap-4">
+                  <Input
+                    id="coverPhoto"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        if (previewUrl) {
+                          URL.revokeObjectURL(previewUrl);
+                        }
+                        setFile(file);
+                        // Create preview URL
+                        const url = URL.createObjectURL(file);
+                        setPreviewUrl(url);
+                      }
+                    }}
+                    disabled={isUploading}
+                  />
+                  {previewUrl && (
+                    <div className="relative w-full h-48 rounded-md overflow-hidden bg-muted">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={previewUrl || "/placeholder.svg"}
+                        alt="Cover photo preview"
+                        className="object-cover w-full h-full"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2"
+                        onClick={() => {
+                          if (previewUrl) {
+                            URL.revokeObjectURL(previewUrl);
+                          }
+                          setFile(null);
+                          setPreviewUrl(null);
+                          setFormData({ ...formData, coverPhotoUrl: '' });
+                          // Reset file input
+                          const fileInput = document.getElementById('coverPhoto') as HTMLInputElement;
+                          if (fileInput) fileInput.value = '';
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Upload an image for your club cover (Max 5MB)
+                  </p>
+                </div>
               </div>
+
+              {errors.form && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
+                  {errors.form}
+                </div>
+              )}
 
               <div className="flex gap-4">
                 <Button
@@ -187,10 +287,10 @@ export default function CreateClubPage() {
                 </Button>
                 <Button
                   type="submit"
-                  disabled={isPending}
+                  disabled={isPending || isUploading}
                   className="flex-1"
                 >
-                  {isPending ? 'Creating...' : 'Create Club'}
+                  {isUploading ? 'Uploading...' : isPending ? 'Creating...' : 'Create Club'}
                 </Button>
               </div>
             </form>

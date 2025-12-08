@@ -9,9 +9,9 @@ import { handleError } from '@/lib/utils/error-handler';
  * @returns Wrapped handler with error handling
  */
 export function withErrorHandler<T>(
-  handler: (request: NextRequest, context?: T) => Promise<Response>
+  handler: (request: NextRequest, context: T) => Promise<Response>
 ) {
-  return async (request: NextRequest, context?: T): Promise<Response> => {
+  return async (request: NextRequest, context: T): Promise<Response> => {
     try {
       return await handler(request, context);
     } catch (error) {
@@ -29,11 +29,11 @@ export function withErrorHandler<T>(
  */
 export function composeMiddleware<T>(
   ...middlewares: Array<
-    (handler: (request: NextRequest, context?: T) => Promise<Response>) => 
-    (request: NextRequest, context?: T) => Promise<Response>
+    (handler: (request: NextRequest, context: T) => Promise<Response>) => 
+    (request: NextRequest, context: T) => Promise<Response>
   >
 ) {
-  return (handler: (request: NextRequest, context?: T) => Promise<Response>) => {
+  return (handler: (request: NextRequest, context: T) => Promise<Response>) => {
     return middlewares.reduceRight(
       (wrappedHandler, middleware) => middleware(wrappedHandler),
       handler

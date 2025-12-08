@@ -1,8 +1,8 @@
 import { createServerClient } from '@/lib/supabase/server';
 import { Tables, TablesInsert, TablesUpdate } from '@/types/supabase';
+import { Event } from './event.repository';
 
 export type Club = Tables<'clubs'>;
-export type Event = Tables<'events'>;
 export type CreateClubData = TablesInsert<'clubs'>;
 export type UpdateClubData = TablesUpdate<'clubs'>;
 
@@ -143,5 +143,46 @@ export class ClubRepository {
     }
 
     return event;
+  }
+
+  async findByStatus(status: 'pending' | 'approved' | 'rejected' | 'suspended'): Promise<Club[]> {
+    const { data: clubs, error } = await this.supabase
+      .from('clubs')
+      .select('*')
+      .eq('status', status)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw new Error(`Failed to find clubs by status: ${error.message}`);
+    }
+
+    return clubs || [];
+  }
+
+  async updateStatus(clubId: string, status: 'pending' | 'approved' | 'rejected' | 'suspended'): Promise<Club> {
+    const { data: club, error } = await this.supabase
+      .from('clubs')
+      .update({ status })
+      .eq('club_id', clubId)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to update club status: ${error.message}`);
+    }
+
+    return club;
+  }
+  async countCreatedAfter(date: Date): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('clubs')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', date.toISOString());
+
+    if (error) {
+      throw new Error(`Failed to count recently created clubs: ${error.message}`);
+    }
+
+    return count || 0;
   }
 }

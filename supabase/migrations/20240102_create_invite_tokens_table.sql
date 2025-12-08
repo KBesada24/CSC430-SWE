@@ -12,4 +12,10 @@ CREATE INDEX IF NOT EXISTS idx_invite_tokens_token ON public.invite_tokens(token
 CREATE INDEX IF NOT EXISTS idx_invite_tokens_club ON public.invite_tokens(club_id);
 
 -- Add to realtime publication
-ALTER PUBLICATION supabase_realtime ADD TABLE public.invite_tokens;
+-- Add to realtime publication if not already present
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'invite_tokens') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.invite_tokens;
+  END IF;
+END $$;

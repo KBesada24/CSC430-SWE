@@ -20,7 +20,7 @@ export async function validateRequest<T>(
     return validatedData;
   } catch (error) {
     if (error instanceof ZodError) {
-      const formattedErrors = error.errors.map((err) => ({
+      const formattedErrors = error.issues.map((err) => ({
         path: err.path.join('.'),
         message: err.message,
       }));
@@ -54,7 +54,7 @@ export function validateQueryParams<T>(
     return validatedData;
   } catch (error) {
     if (error instanceof ZodError) {
-      const formattedErrors = error.errors.map((err) => ({
+      const formattedErrors = error.issues.map((err) => ({
         path: err.path.join('.'),
         message: err.message,
       }));

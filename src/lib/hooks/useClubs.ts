@@ -135,3 +135,20 @@ export function useJoinViaInvite() {
     },
   });
 }
+
+// Delete club mutation
+export function useDeleteClub() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (clubId: string) => clubsApi.deleteClub(clubId),
+    onSuccess: (_, clubId) => {
+      queryClient.removeQueries({ queryKey: clubKeys.detail(clubId) });
+      queryClient.invalidateQueries({ queryKey: clubKeys.lists() });
+      toast.success('Club deleted successfully!');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to delete club');
+    },
+  });
+}

@@ -163,21 +163,38 @@ export class ClubService {
       admin_student_id: adminId,
     });
 
-    // Create active membership for admin
-    await this.membershipRepository.create(adminId, club.club_id);
-    await this.membershipRepository.updateStatus(adminId, club.club_id, 'active');
+    try {
+      // Create active membership for admin
+      await this.membershipRepository.create(adminId, club.club_id);
+      await this.membershipRepository.updateStatus(adminId, club.club_id, 'active');
 
-    return {
-      club_id: club.club_id,
-      name: club.name,
-      description: club.description,
-      category: club.category,
-      cover_photo_url: club.cover_photo_url,
-      admin_student_id: club.admin_student_id,
-      created_at: club.created_at,
-      member_count: 1, // Admin is the first member
-      next_event: null,
-    };
+      // Upgrade user to club_admin role if they're just a regular student
+      const student = await this.studentRepository.findById(adminId);
+      if (student && student.role === 'student') {
+        await this.studentRepository.updateRole(adminId, 'club_admin');
+      }
+
+      return {
+        club_id: club.club_id,
+        name: club.name,
+        description: club.description,
+        category: club.category,
+        cover_photo_url: club.cover_photo_url,
+        admin_student_id: club.admin_student_id,
+        created_at: club.created_at,
+        member_count: 1, // Admin is the first member
+        next_event: null,
+      };
+    } catch (error) {
+      // Rollback: delete the created club (and cascading memberships)
+      console.error('Club creation failed, rolling back:', error);
+      try {
+        await this.delete(club.club_id);
+      } catch (rollbackError) {
+        console.error('Rollback failed:', rollbackError);
+      }
+      throw error;
+    }
   }
 
   /**

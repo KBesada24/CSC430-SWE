@@ -81,4 +81,29 @@ export class StudentRepository {
       throw new Error(`Failed to delete student: ${error.message}`);
     }
   }
+
+  async isUniversityAdmin(studentId: string): Promise<boolean> {
+    const student = await this.findById(studentId);
+    return student?.role === 'university_admin';
+  }
+
+  async isClubAdmin(studentId: string): Promise<boolean> {
+    const student = await this.findById(studentId);
+    return student?.role === 'club_admin' || student?.role === 'university_admin';
+  }
+
+  async updateRole(studentId: string, role: 'student' | 'club_admin' | 'university_admin'): Promise<Student> {
+    const { data: student, error } = await this.supabase
+      .from('students')
+      .update({ role })
+      .eq('student_id', studentId)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to update student role: ${error.message}`);
+    }
+
+    return student;
+  }
 }

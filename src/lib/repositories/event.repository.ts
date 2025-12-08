@@ -1,5 +1,7 @@
 import { createServerClient } from '@/lib/supabase/server';
 import { Tables, TablesInsert, TablesUpdate } from '@/types/supabase';
+import { Pagination } from './club.repository';
+export type { Pagination } from './club.repository';
 
 export type Event = Tables<'events'>;
 export type CreateEventData = TablesInsert<'events'>;
@@ -8,11 +10,6 @@ export type UpdateEventData = TablesUpdate<'events'>;
 export interface EventFilters {
   clubId?: string;
   upcoming?: boolean;
-}
-
-export interface Pagination {
-  page: number;
-  limit: number;
 }
 
 export interface EventQueryResult {
@@ -135,6 +132,32 @@ export class EventRepository {
 
     if (error) {
       throw new Error(`Failed to get attendee count: ${error.message}`);
+    }
+
+    return count || 0;
+  }
+  async countCreatedAfter(date: Date): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('events')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', date.toISOString());
+
+    if (error) {
+      throw new Error(`Failed to count recently created events: ${error.message}`);
+    }
+
+    return count || 0;
+  }
+
+  async countUpcoming(until: Date): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('events')
+      .select('*', { count: 'exact', head: true })
+      .gte('event_date', new Date().toISOString())
+      .lte('event_date', until.toISOString());
+
+    if (error) {
+      throw new Error(`Failed to count upcoming events: ${error.message}`);
     }
 
     return count || 0;

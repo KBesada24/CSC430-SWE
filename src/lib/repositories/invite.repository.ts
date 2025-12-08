@@ -4,7 +4,7 @@ export interface InviteToken {
   token_id: string;
   club_id: string;
   token: string;
-  created_at: string;
+  created_at: string | null;
 }
 
 export interface CreateInviteData {

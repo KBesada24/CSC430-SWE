@@ -24,6 +24,8 @@ interface ApiClientConfig {
   timeout?: number;
 }
 
+const TOKEN_KEY = 'eagleconnect_auth_token';
+
 class ApiClient {
   private baseURL: string;
   private timeout: number;
@@ -32,6 +34,14 @@ class ApiClient {
   constructor(config: ApiClientConfig) {
     this.baseURL = config.baseURL;
     this.timeout = config.timeout || 30000;
+    
+    // Initialize token from storage if available
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem(TOKEN_KEY);
+      if (storedToken) {
+        this.authToken = storedToken;
+      }
+    }
   }
 
   /**
@@ -39,6 +49,9 @@ class ApiClient {
    */
   setAuthToken(token: string) {
     this.authToken = token;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(TOKEN_KEY, token);
+    }
   }
 
   /**
@@ -46,6 +59,9 @@ class ApiClient {
    */
   clearAuthToken() {
     this.authToken = null;
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(TOKEN_KEY);
+    }
   }
 
   /**
@@ -56,8 +72,12 @@ class ApiClient {
       'Content-Type': 'application/json',
     };
 
-    if (this.authToken) {
-      headers['Authorization'] = `Bearer ${this.authToken}`;
+    // Use cached token or fall back to reading from localStorage
+    // Use cached token (single source of truth)
+    const token = this.authToken;
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     return headers;

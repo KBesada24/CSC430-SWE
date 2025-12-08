@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { studentsApi } from '../api/students';
 import { toast } from 'sonner';
+import { useAuth } from '../contexts/AuthContext';
 
 // Query keys
 export const studentKeys = {
@@ -12,22 +13,21 @@ export const studentKeys = {
 
 // Fetch student profile
 export function useStudentProfile(studentId: string) {
+  const { isLoading: authLoading, isAuthenticated } = useAuth();
   return useQuery({
     queryKey: studentKeys.detail(studentId),
     queryFn: () => studentsApi.getStudent(studentId),
-    enabled: !!studentId,
+    enabled: !!studentId && !authLoading && isAuthenticated,
   });
 }
 
 // Fetch student memberships
 export function useStudentMemberships(studentId: string) {
+  const { isLoading: authLoading, isAuthenticated } = useAuth();
   return useQuery({
     queryKey: studentKeys.memberships(studentId),
-    queryFn: async () => {
-      const response = await studentsApi.getMemberships(studentId);
-      return response.memberships;
-    },
-    enabled: !!studentId,
+    queryFn: () => studentsApi.getMemberships(studentId),
+    enabled: !!studentId && !authLoading && isAuthenticated,
   });
 }
 

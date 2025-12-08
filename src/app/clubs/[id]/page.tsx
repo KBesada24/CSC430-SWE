@@ -1,18 +1,30 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useClub, useClubMembers, useJoinClub, useLeaveClub } from '@/lib/hooks/useClubs';
+import { useClub, useClubMembers, useJoinClub, useLeaveClub, useDeleteClub } from '@/lib/hooks/useClubs';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { useStudentMemberships } from '@/lib/hooks/useStudent';
 import { MembershipWithClub } from '@/types/api.types';
 import Header from '@/components/layout/Header';
 import ClubInviteSection from '@/components/clubs/ClubInviteSection';
+import EventCreateForm from '@/components/events/EventCreateForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Calendar, Users, ArrowLeft } from 'lucide-react';
+import { Calendar, Users, ArrowLeft, Trash2 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function ClubDetailPage() {
   const params = useParams();
@@ -25,6 +37,7 @@ export default function ClubDetailPage() {
   const { data: memberships } = useStudentMemberships(user?.studentId || '');
   const { mutate: joinClub, isPending: isJoining } = useJoinClub();
   const { mutate: leaveClub, isPending: isLeaving } = useLeaveClub();
+  const { mutate: deleteClub, isPending: isDeleting } = useDeleteClub();
   
   const isJoined = memberships?.some((m: MembershipWithClub) => m.clubId === clubId && m.status === 'active');
   const isAdmin = club?.adminStudentId === user?.studentId;
@@ -40,6 +53,14 @@ export default function ClubDetailPage() {
     } else {
       joinClub(clubId);
     }
+  };
+
+  const handleDeleteClub = () => {
+    deleteClub(clubId, {
+      onSuccess: () => {
+        router.push('/');
+      },
+    });
   };
 
   if (isLoading) {
@@ -188,15 +209,43 @@ export default function ClubDetailPage() {
                     : 'Join Club'}
                 </Button>
                 {isAdmin && (
-                  <Button className="w-full mt-2" variant="secondary">
-                    Manage Club
-                  </Button>
+                  <>
+                    <Button className="w-full mt-2" variant="secondary">
+                      Manage Club
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button className="w-full mt-2" variant="destructive" disabled={isDeleting}>
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          {isDeleting ? 'Deleting...' : 'Delete Club'}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the club
+                            &quot;{club?.name}&quot; and remove all members, events, and associated data.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={handleDeleteClub} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                            Delete Club
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </>
                 )}
               </CardContent>
             </Card>
 
             {/* Invite Section - Only visible to admin */}
             {isAdmin && <ClubInviteSection clubId={clubId} />}
+
+            {/* Event Creation - Only visible to admin */}
+            {isAdmin && <EventCreateForm clubId={clubId} />}
           </div>
         </div>
       </div>

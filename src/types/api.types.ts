@@ -71,6 +71,7 @@ export interface StudentProfile {
   firstName: string;
   lastName: string;
   createdAt: string | null;
+  role: 'student' | 'club_admin' | 'university_admin';
 }
 
 export interface UpdateStudentDto {
@@ -247,6 +248,11 @@ export interface PlatformStats {
   totalClubs: number;
   totalMembers: number;
   upcomingEvents: number;
+  trends?: {
+    clubsChange: number;
+    membersChange: number;
+    eventsChange: number;
+  };
 }
 
 export interface StudentStats {

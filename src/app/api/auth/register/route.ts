@@ -25,6 +25,7 @@ async function registerHandler(request: NextRequest) {
       email: student.email,
       firstName: student.first_name,
       lastName: student.last_name,
+      role: student.role,
     },
     201
   );
