@@ -255,6 +255,128 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          club_id: string
+          rating: number
+          review_id: string
+          student_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          club_id: string
+          rating: number
+          review_id?: string
+          student_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          club_id?: string
+          rating?: number
+          review_id?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["club_id"]
+          },
+          {
+            foreignKeyName: "reviews_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          club_id: string
+          message_id: string
+          student_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          club_id: string
+          message_id?: string
+          student_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          club_id?: string
+          message_id?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["club_id"]
+          },
+          {
+            foreignKeyName: "messages_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          message: string
+          metadata: Json | null
+          notification_id: string
+          read: boolean
+          student_id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          message: string
+          metadata?: Json | null
+          notification_id?: string
+          read?: boolean
+          student_id: string
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          message?: string
+          metadata?: Json | null
+          notification_id?: string
+          read?: boolean
+          student_id?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["student_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

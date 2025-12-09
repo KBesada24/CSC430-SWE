@@ -2,12 +2,14 @@ import { EventRepository, EventFilters, Pagination } from '@/lib/repositories/ev
 import { ClubRepository } from '@/lib/repositories/club.repository';
 import { RsvpRepository } from '@/lib/repositories/rsvp.repository';
 import { StudentRepository } from '@/lib/repositories/student.repository';
+import { NotificationService } from './notification.service';
 import {
   NotFoundError,
   ValidationError,
   ConflictError,
 } from '@/lib/utils/error-handler';
 import { PaginatedResponse } from '@/lib/utils/api-response';
+import { EventListItem, EventDetails, AttendeeWithStudent } from '@/types/api.types';
 
 export interface CreateEventDto {
   title: string;
@@ -24,60 +26,19 @@ export interface UpdateEventDto {
   description?: string;
 }
 
-export interface EventWithDetails {
-  event_id: string;
-  title: string;
-  event_date: string;
-  location: string;
-  description: string | null;
-  club_id: string;
-  created_at: string | null;
-  club: {
-    club_id: string;
-    name: string;
-    category: string;
-  };
-  attendee_count: number;
-}
-
-export interface EventListItem {
-  event_id: string;
-  title: string;
-  event_date: string;
-  location: string;
-  description: string | null;
-  club_id: string;
-  created_at: string | null;
-  club: {
-    club_id: string;
-    name: string;
-    category: string;
-  };
-}
-
-export interface AttendeeWithStudent {
-  student_id: string;
-  event_id: string;
-  created_at: string | null;
-  student: {
-    student_id: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
-}
-
 export class EventService {
   private eventRepository: EventRepository;
   private clubRepository: ClubRepository;
   private rsvpRepository: RsvpRepository;
   private studentRepository: StudentRepository;
+  private notificationService: NotificationService;
 
   constructor() {
     this.eventRepository = new EventRepository();
     this.clubRepository = new ClubRepository();
     this.rsvpRepository = new RsvpRepository();
     this.studentRepository = new StudentRepository();
+    this.notificationService = new NotificationService();
   }
 
   /**
@@ -98,15 +59,15 @@ export class EventService {
         }
 
         return {
-          event_id: event.event_id,
+          eventId: event.event_id || (event as any).id,
           title: event.title,
-          event_date: event.event_date,
+          eventDate: event.event_date,
           location: event.location,
           description: event.description,
-          club_id: event.club_id,
-          created_at: event.created_at,
+          clubId: event.club_id,
+          createdAt: event.created_at,
           club: {
-            club_id: club.club_id,
+            clubId: club.club_id,
             name: club.name,
             category: club.category,
           },
@@ -130,7 +91,7 @@ export class EventService {
   /**
    * Gets an event by ID with club info and attendee count
    */
-  async getById(id: string): Promise<EventWithDetails> {
+  async getById(id: string): Promise<EventDetails> {
     const event = await this.eventRepository.findById(id);
     if (!event) {
       throw new NotFoundError('Event');
@@ -144,26 +105,26 @@ export class EventService {
     const attendeeCount = await this.eventRepository.getAttendeeCount(id);
 
     return {
-      event_id: event.event_id,
+      eventId: event.event_id || (event as any).id,
       title: event.title,
-      event_date: event.event_date,
+      eventDate: event.event_date,
       location: event.location,
       description: event.description,
-      club_id: event.club_id,
-      created_at: event.created_at,
+      clubId: event.club_id,
+      createdAt: event.created_at,
       club: {
-        club_id: club.club_id,
+        clubId: club.club_id,
         name: club.name,
         category: club.category,
       },
-      attendee_count: attendeeCount,
+      attendeeCount: attendeeCount,
     };
   }
 
   /**
    * Creates a new event with date validation
    */
-  async create(data: CreateEventDto): Promise<EventWithDetails> {
+  async create(data: CreateEventDto): Promise<EventDetails> {
     // Validate event date is in the future
     if (!this.validateEventDate(data.eventDate)) {
       throw new ValidationError('Event date must be in the future');
@@ -183,27 +144,41 @@ export class EventService {
       club_id: data.clubId,
     });
 
+    // Notify members
+    try {
+      await this.notificationService.notifyClubMembers(
+        data.clubId,
+        'New Event!',
+        `New event "${data.title}" has been scheduled for ${new Date(data.eventDate).toLocaleDateString()}.`,
+        'event_invite',
+        { eventId: event.event_id, clubId: data.clubId }
+      );
+    } catch (e) {
+      console.error('Failed to send notifications:', e);
+      // Don't fail the request if notification fails
+    }
+
     return {
-      event_id: event.event_id,
+      eventId: event.event_id || (event as any).id,
       title: event.title,
-      event_date: event.event_date,
+      eventDate: event.event_date,
       location: event.location,
       description: event.description,
-      club_id: event.club_id,
-      created_at: event.created_at,
+      clubId: event.club_id,
+      createdAt: event.created_at,
       club: {
-        club_id: club.club_id,
+        clubId: club.club_id,
         name: club.name,
         category: club.category,
       },
-      attendee_count: 0,
+      attendeeCount: 0,
     };
   }
 
   /**
    * Updates an event with date validation
    */
-  async update(id: string, data: UpdateEventDto): Promise<EventWithDetails> {
+  async update(id: string, data: UpdateEventDto): Promise<EventDetails> {
     const event = await this.eventRepository.findById(id);
     if (!event) {
       throw new NotFoundError('Event');
@@ -239,19 +214,19 @@ export class EventService {
     const attendeeCount = await this.eventRepository.getAttendeeCount(id);
 
     return {
-      event_id: updatedEvent.event_id,
+      eventId: updatedEvent.event_id || (updatedEvent as any).id,
       title: updatedEvent.title,
-      event_date: updatedEvent.event_date,
+      eventDate: updatedEvent.event_date,
       location: updatedEvent.location,
       description: updatedEvent.description,
-      club_id: updatedEvent.club_id,
-      created_at: updatedEvent.created_at,
+      clubId: updatedEvent.club_id,
+      createdAt: updatedEvent.created_at,
       club: {
-        club_id: club.club_id,
+        clubId: club.club_id,
         name: club.name,
         category: club.category,
       },
-      attendee_count: attendeeCount,
+      attendeeCount: attendeeCount,
     };
   }
 
@@ -303,14 +278,14 @@ export class EventService {
         }
 
         return {
-          student_id: rsvp.student_id,
-          event_id: rsvp.event_id,
-          created_at: rsvp.created_at,
+          studentId: rsvp.student_id,
+          eventId: rsvp.event_id,
+          createdAt: rsvp.created_at,
           student: {
-            student_id: student.student_id,
+            studentId: student.student_id,
             email: student.email,
-            first_name: student.first_name,
-            last_name: student.last_name,
+            firstName: student.first_name,
+            lastName: student.last_name,
           },
         };
       })
@@ -342,9 +317,9 @@ export class EventService {
     const rsvp = await this.rsvpRepository.create(studentId, eventId);
 
     return {
-      student_id: rsvp.student_id,
-      event_id: rsvp.event_id,
-      created_at: rsvp.created_at,
+      studentId: rsvp.student_id,
+      eventId: rsvp.event_id,
+      createdAt: rsvp.created_at,
     };
   }
 

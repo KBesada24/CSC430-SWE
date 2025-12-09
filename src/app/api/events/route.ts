@@ -31,15 +31,15 @@ async function getEventsHandler(request: NextRequest) {
 
   return paginatedResponse(
     result.items.map((event) => ({
-      eventId: event.event_id,
+      eventId: event.eventId,
       title: event.title,
-      eventDate: event.event_date,
+      eventDate: event.eventDate,
       location: event.location,
       description: event.description,
-      clubId: event.club_id,
-      createdAt: event.created_at,
+      clubId: event.clubId,
+      createdAt: event.createdAt,
       club: {
-        clubId: event.club.club_id,
+        clubId: event.club.clubId,
         name: event.club.name,
         category: event.club.category,
       },
@@ -71,19 +71,19 @@ async function createEventHandler(request: NextRequest) {
 
   return successResponse(
     {
-      eventId: event.event_id,
+      eventId: event.eventId,
       title: event.title,
-      eventDate: event.event_date,
+      eventDate: event.eventDate,
       location: event.location,
       description: event.description,
-      clubId: event.club_id,
-      createdAt: event.created_at,
+      clubId: event.clubId,
+      createdAt: event.createdAt,
       club: {
-        clubId: event.club.club_id,
+        clubId: event.club.clubId,
         name: event.club.name,
         category: event.club.category,
       },
-      attendeeCount: event.attendee_count,
+      attendeeCount: event.attendeeCount,
     },
     201
   );

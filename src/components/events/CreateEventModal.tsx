@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dialog';
 import { Calendar, Plus } from 'lucide-react';
 
-interface EventCreateFormProps {
+interface CreateEventModalProps {
   clubId: string;
 }
 
@@ -31,7 +31,7 @@ interface EventFormData {
   description?: string;
 }
 
-export default function EventCreateForm({ clubId }: EventCreateFormProps) {
+export default function CreateEventModal({ clubId }: CreateEventModalProps) {
   const [open, setOpen] = useState(false);
   const { mutate: createEvent, isPending } = useCreateEvent();
   

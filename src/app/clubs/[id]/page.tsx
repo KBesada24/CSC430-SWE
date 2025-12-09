@@ -7,13 +7,16 @@ import { useStudentMemberships } from '@/lib/hooks/useStudent';
 import { MembershipWithClub } from '@/types/api.types';
 import Header from '@/components/layout/Header';
 import ClubInviteSection from '@/components/clubs/ClubInviteSection';
-import EventCreateForm from '@/components/events/EventCreateForm';
+import EventsTab from '@/components/clubs/EventsTab';
+import ChatTab from '@/components/clubs/ChatTab';
+import ReviewsTab from '@/components/clubs/ReviewsTab';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Calendar, Users, ArrowLeft, Trash2 } from 'lucide-react';
+import { Users, ArrowLeft, Trash2, Info, MessageSquare } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -129,67 +132,83 @@ export default function ClubDetailPage() {
               </div>
             </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>About</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {club.description || 'No description available.'}
-                </p>
-              </CardContent>
-            </Card>
-
-            {club.nextEvent && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Next Event</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-start gap-3">
-                    <Calendar className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="font-medium">{club.nextEvent.title}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(club.nextEvent.eventDate).toLocaleDateString()}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {club.nextEvent.location}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {members && members.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Members ({members.length})</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {members.slice(0, 10).map((member) => (
-                      <div key={member.studentId} className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback>
-                            {member.student.firstName[0]}{member.student.lastName[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">
-                            {member.student.firstName} {member.student.lastName}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {member.student.email}
-                          </p>
-                        </div>
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className={`grid w-full ${isJoined ? 'grid-cols-5' : 'grid-cols-4'}`}>
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="events">Events</TabsTrigger>
+                <TabsTrigger value="members">Members</TabsTrigger>
+                <TabsTrigger value="reviews">Reviews</TabsTrigger>
+                {isJoined && (
+                  <TabsTrigger value="chat" className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Chat
+                  </TabsTrigger>
+                )}
+              </TabsList>
+              
+              <TabsContent value="overview" className="space-y-6 mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                       <Info className="h-5 w-5" />
+                       About
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground whitespace-pre-wrap">
+                      {club.description || 'No description available.'}
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="events" className="mt-6">
+                <EventsTab clubId={clubId} isAdmin={isAdmin} />
+              </TabsContent>
+              
+              <TabsContent value="members" className="mt-6">
+                {members && members.length > 0 ? (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Members ({members.length})</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {members.map((member) => (
+                          <div key={member.studentId} className="flex items-center gap-3">
+                            <Avatar>
+                              <AvatarFallback>
+                                {member.student.firstName[0]}{member.student.lastName[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">
+                                {member.student.firstName} {member.student.lastName}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {member.student.email}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                    </CardContent>
+                  </Card>
+                ) : (
+                   <p className="text-muted-foreground">No members found.</p>
+                )}
+              </TabsContent>
+
+              <TabsContent value="reviews" className="mt-6">
+                <ReviewsTab clubId={clubId} />
+              </TabsContent>
+
+              {isJoined && (
+                <TabsContent value="chat" className="mt-6">
+                  <ChatTab clubId={clubId} />
+                </TabsContent>
+              )}
+            </Tabs>
           </div>
 
           {/* Sidebar */}
@@ -247,9 +266,6 @@ export default function ClubDetailPage() {
 
             {/* Invite Section - Only visible to admin */}
             {isAdmin && <ClubInviteSection clubId={clubId} />}
-
-            {/* Event Creation - Only visible to admin */}
-            {isAdmin && <EventCreateForm clubId={clubId} />}
           </div>
         </div>
       </div>
