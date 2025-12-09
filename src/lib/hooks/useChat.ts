@@ -57,8 +57,9 @@ export function useChatMessages(clubId: string) {
   return useQuery({
     queryKey: chatKeys.messages(clubId),
     queryFn: async () => {
-      const response = await apiClient.get<{ data: ChatMessage[] }>(`/clubs/${clubId}/messages`);
-      return response.data;
+      // apiClient.get returns the data payload directly (unwrapped from ApiResponse)
+      const messages = await apiClient.get<ChatMessage[]>(`/clubs/${clubId}/messages`);
+      return messages;
     },
   });
 }
