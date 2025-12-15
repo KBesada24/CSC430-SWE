@@ -26,8 +26,9 @@ export function useReviews(clubId: string) {
   return useQuery({
     queryKey: reviewKeys.list(clubId),
     queryFn: async () => {
-      const response = await apiClient.get<{ data: Review[] }>(`/clubs/${clubId}/reviews`);
-      return response.data;
+      // apiClient.get returns the data payload directly (unwrapped from ApiResponse)
+      const reviews = await apiClient.get<Review[]>(`/clubs/${clubId}/reviews`);
+      return reviews;
     },
   });
 }
