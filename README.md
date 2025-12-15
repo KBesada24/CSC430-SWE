@@ -432,7 +432,7 @@ Make sure to set all environment variables in your hosting platform's dashboard.
 
 ## 📄 License
 
-This project is developed for **CSC 430 - Software Engineering** at [Your University].
+This project is developed for **CSC 430 - Software Engineering** at College of Staten Island.
 
 ---
 
@@ -440,11 +440,11 @@ This project is developed for **CSC 430 - Software Engineering** at [Your Univer
 
 **The Fikr Five**
 
-- [Kirollos Besada]
-- [Mohammad Slim]
-- [Adam Belhadj]
-- [Timothy Mesak]
-- [Seif Awad]
+- Kirollos Besada
+- Mohammad Slim
+- Adam Belhadj
+- Timothy Mesak
+- Seif Awad
 
 ---
 
