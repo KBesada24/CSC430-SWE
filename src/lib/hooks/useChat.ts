@@ -2,8 +2,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../api/client';
 import { toast } from 'sonner';
-import { createClient } from '@/lib/supabase/client';
-import { useEffect } from 'react';
 
 export const chatKeys = {
   all: ['chat'] as const,
@@ -26,35 +24,6 @@ export interface ChatMessage {
 }
 
 export function useChatMessages(clubId: string) {
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const supabase = createClient();
-    
-    const channel = supabase
-      .channel(`club_chat:${clubId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `club_id=eq.${clubId}`,
-        },
-        async (payload) => {
-          // Invalidate query to refetch latest messages including student info
-          // Optimization: could optimistically add message if we had student info,
-          // but refetch is safer for now to get the join.
-          await queryClient.invalidateQueries({ queryKey: chatKeys.messages(clubId) });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [clubId, queryClient]);
-
   return useQuery({
     queryKey: chatKeys.messages(clubId),
     queryFn: async () => {
@@ -62,6 +31,10 @@ export function useChatMessages(clubId: string) {
       const messages = await apiClient.get<ChatMessage[]>(`/clubs/${clubId}/messages`);
       return messages;
     },
+    // Poll for new messages every 2 seconds for real-time feel
+    refetchInterval: 2000,
+    // Keep refetching even when tab is not focused
+    refetchIntervalInBackground: true,
   });
 }
 
