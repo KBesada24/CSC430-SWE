@@ -440,11 +440,11 @@ This project is developed for **CSC 430 - Software Engineering** at [Your Univer
 
 **The Fikr Five**
 
-- [Team Member 1]
-- [Team Member 2]
-- [Team Member 3]
-- [Team Member 4]
-- [Team Member 5]
+- [Kirollos Besada]
+- [Mohammad Slim]
+- [Adam Belhadj]
+- [Timothy Mesak]
+- [Seif Awad]
 
 ---
 
