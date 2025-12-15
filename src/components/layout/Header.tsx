@@ -1,8 +1,7 @@
 'use client';
 
-import { Bell, Search, User, Plus } from "lucide-react";
+import { Bell, User, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import HeaderNotificationBell from "@/components/layout/HeaderNotificationBell";
 import {
@@ -32,16 +31,6 @@ export default function Header() {
               EC
             </div>
             <span className="text-xl font-bold hidden sm:inline-block">EagleConnect</span>
-          </div>
-        </div>
-
-        <div className="flex-1 max-w-md mx-4 hidden md:block">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search clubs..."
-              className="pl-10"
-            />
           </div>
         </div>
 

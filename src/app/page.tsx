@@ -91,6 +91,12 @@ export default function Page() {
                   className="pl-10 h-12"
                   value={heroSearchInput}
                   onChange={(e) => setHeroSearchInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      setSearchQuery(heroSearchInput);
+                    }
+                  }}
                 />
               </div>
               <Button size="lg" className="h-12" onClick={handleExploreClubs}>
