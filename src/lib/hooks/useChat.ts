@@ -27,9 +27,10 @@ export interface ChatMessage {
 
 export function useChatMessages(clubId: string) {
   const queryClient = useQueryClient();
-  const supabase = createClient();
 
   useEffect(() => {
+    const supabase = createClient();
+    
     const channel = supabase
       .channel(`club_chat:${clubId}`)
       .on(
@@ -52,7 +53,7 @@ export function useChatMessages(clubId: string) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [clubId, queryClient, supabase]);
+  }, [clubId, queryClient]);
 
   return useQuery({
     queryKey: chatKeys.messages(clubId),
